@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AtSign, Lock } from 'lucide-react';
 import API from '../api';
 import './AuthPage.css';
 
 export default function AuthPage() {
+  const navigate = useNavigate();
   const [mode, setMode] = useState('login'); // 'login', 'signup', 'forgot', 'reset'
   const [form, setForm] = useState({ name: '', email: '', password: '', token: '' });
   const [error, setError] = useState('');
@@ -29,7 +31,7 @@ export default function AuthPage() {
         });
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('user', JSON.stringify(res.data.user));
-        alert(`Welcome back, ${res.data.user.name}!`);
+        navigate('/');
       } else if (mode === 'signup') {
         const res = await API.post('/auth/register', {
           name: form.name,

@@ -1,0 +1,309 @@
+.explore-wrapper {
+    min-height: 100vh;
+    padding: 100px 20px 40px;
+    background: var(--bg-soft);
+}
+
+.explore-header {
+    max-width: 1000px;
+    margin: 0 auto 32px;
+}
+
+.explore-header h1 {
+    font-size: 32px;
+    color: var(--text-main);
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.explore-header p {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    font-size: 16px;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 16px;
+    padding: 8px 16px;
+    margin-bottom: 24px;
+}
+
+.search-icon {
+    color: var(--text-muted);
+    margin-right: 12px;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: var(--text-main);
+    background: transparent;
+    padding: 8px 0;
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.filter-btn {
+    background: var(--surface-container);
+    border: none;
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Filters Container */
+.filters-container {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    scrollbar-width: none;
+}
+
+.filters-container::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+    color: var(--text-main);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.filter-chip:hover {
+    background: var(--surface-container);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.filter-chip.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* View Toggle */
+.view-toggle {
+    display: flex;
+    gap: 8px;
+    background: white;
+    padding: 4px;
+    border-radius: 12px;
+    width: fit-content;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+    color: var(--primary);
+}
+
+.toggle-btn.active {
+    background: var(--surface-container);
+    color: var(--primary);
+}
+
+/* Main Content Area */
+.explore-main {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* Grid View */
+.explore-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+/* Reusing nearby-card styles from Dashboard.css */
+/* Ensure Dashboard.css is loaded or copy the styles if they conflict */
+
+.nearby-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nearby-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+
+.nearby-image-container {
+    height: 160px;
+    position: relative;
+}
+
+.nearby-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.status-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(4px);
+    text-transform: capitalize;
+}
+
+.active-badge {
+    color: #10b981;
+}
+
+.nearby-info {
+    padding: 16px;
+}
+
+.nearby-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nearby-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.meta-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.meta-price {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.nearby-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-date {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.footer-transport {
+    color: var(--primary);
+    background: var(--surface-container);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Map Placeholder */
+.map-placeholder {
+    width: 100%;
+    height: 500px;
+    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="%23e5e7eb" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)" /><rect width="100%" height="100%" fill="%23f8f7ff" fill-opacity="0.5"/></svg>');
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-overlay {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    padding: 40px;
+    border-radius: 24px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.1);
+    border: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+.map-icon-large {
+    color: var(--primary);
+    margin-bottom: 16px;
+}
+
+.map-overlay h3 {
+    font-size: 20px;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.map-overlay p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}

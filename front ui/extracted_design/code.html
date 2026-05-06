@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MoveTogether - Sanctuary Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#ffb784",
+                        "inverse-on-surface": "#eaf1ff",
+                        "error-container": "#ffdad6",
+                        "on-background": "#121c2a",
+                        "primary-fixed-dim": "#d2bbff",
+                        "surface-variant": "#d9e3f6",
+                        "surface": "#f8f9ff",
+                        "on-secondary": "#ffffff",
+                        "primary": "#630ed4",
+                        "tertiary-container": "#a15100",
+                        "tertiary-fixed": "#ffdcc6",
+                        "outline": "#7b7487",
+                        "surface-dim": "#d0dbed",
+                        "secondary": "#674bb5",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#ccc3d8",
+                        "on-tertiary-fixed-variant": "#713700",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#21005e",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#dee9fc",
+                        "on-secondary-fixed-variant": "#4f319c",
+                        "secondary-fixed-dim": "#cebdff",
+                        "on-surface-variant": "#4a4455",
+                        "surface-bright": "#f8f9ff",
+                        "on-primary-fixed": "#25005a",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#121c2a",
+                        "surface-container-highest": "#d9e3f6",
+                        "primary-container": "#7c3aed",
+                        "inverse-surface": "#27313f",
+                        "background": "#f8f9ff",
+                        "tertiary": "#7d3d00",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-container": "#ede0ff",
+                        "surface-tint": "#732ee4",
+                        "on-secondary-container": "#3f1e8c",
+                        "inverse-primary": "#d2bbff",
+                        "on-tertiary-container": "#ffe0cd",
+                        "secondary-fixed": "#e8ddff",
+                        "surface-container": "#e6eeff",
+                        "secondary-container": "#ab8ffe",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#eaddff",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "20px",
+                        "gutter": "16px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "h1": ["Inter"],
+                        "label-md": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "h2": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-[12px] shadow-[0_10px_20px_rgba(124,58,237,0.08)]">
+<div class="flex justify-between items-center px-container-padding py-md max-w-screen-xl mx-auto">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">school</span>
+</div>
+<h1 class="font-h2 text-h2 font-bold text-primary">MoveTogether</h1>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-primary hover:opacity-80 transition-opacity active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-[88px] pb-[120px] px-container-padding max-w-screen-xl mx-auto space-y-xl">
+<!-- Welcome Greeting & CTA Section -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-lg">
+<div class="space-y-xs">
+<h2 class="font-h1 text-h1 text-on-background">Hello, Alex</h2>
+<p class="font-body-lg text-on-surface-variant max-w-md">Ready for your next academic adventure? The sanctuary is open for discovery.</p>
+</div>
+<button class="group relative flex items-center justify-center gap-md bg-gradient-to-r from-primary to-primary-container text-on-primary py-md px-xl rounded-xl shadow-[0_8px_30px_rgb(99,14,212,0.15)] hover:shadow-[0_8px_35px_rgb(99,14,212,0.25)] transition-all duration-300 active:scale-95 w-full md:w-auto">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span class="font-label-md text-label-md">Create a Trip</span>
+</button>
+</section>
+<!-- Upcoming Trips Section - Asymmetric Bento Grid -->
+<section class="space-y-md">
+<div class="flex items-center justify-between">
+<h3 class="font-h3 text-h3 text-on-surface">Upcoming Trips</h3>
+<a class="text-primary font-label-md text-label-md hover:underline transition-all" href="#">View Schedule</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-md">
+<!-- Large Primary Trip Card -->
+<div class="md:col-span-8 group relative overflow-hidden rounded-xl bg-surface-container-lowest border border-outline-variant/30 shadow-[0_10px_20px_rgba(124,58,237,0.08)]">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A group of diverse university students walking together through a vibrant, sun-drenched historical campus courtyard with ancient brick buildings and lush green ivy. The lighting is warm and golden, casting long soft shadows across the cobblestones, creating a peaceful and aspirational mood that aligns with a premium education brand. The overall aesthetic is clean, modern, and high-fidelity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgv63SXaPcuGM2c8YikdbUy2Ql6saqEoAiT99pAWcux9S0n8ZBmBQc5tWmj5aUNc6RMBFgTPY9OWZWM04n_mItu10LLpl2b1mq4NQlyoYPbuI4awt9_qT_b3xRmoGZd6KiQZtscEAvbJq_kqTgfFALOC1CF5X7J114dWoP9JeAp29smmQiTyp0i-1cJbZ_rmObz2zS_G-s1NF1ODYhfu_9IfKTObi6Dks2ltnHUU6wgDzF8MfnahqRmcT6IZDnZD3Nk3d9vefSpKk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+</div>
+<div class="relative z-10 h-full flex flex-col justify-end p-lg min-h-[320px]">
+<div class="flex flex-wrap gap-sm mb-md">
+<span class="bg-primary/20 backdrop-blur-md text-white px-md py-xs rounded-full font-label-sm text-label-sm border border-white/20">University Tech Hub</span>
+<span class="bg-white/10 backdrop-blur-md text-white px-md py-xs rounded-full font-label-sm text-label-sm border border-white/10">In 3 days</span>
+</div>
+<h4 class="font-h2 text-h2 text-white mb-xs">Mountain View Research Labs</h4>
+<div class="flex items-center justify-between text-white/90">
+<div class="flex items-center gap-md">
+<span class="flex items-center gap-xs font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">group</span> 12 travelers
+                                </span>
+<span class="flex items-center gap-xs font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">payments</span> $45.00
+                                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Smaller Trip Card -->
+<div class="md:col-span-4 glass-card p-lg rounded-xl flex flex-col justify-between shadow-[0_10px_20px_rgba(124,58,237,0.08)]">
+<div class="space-y-sm">
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined">library_books</span>
+</div>
+<h4 class="font-h3 text-h3 text-on-surface">Central Library Shuttle</h4>
+<p class="text-on-surface-variant font-body-md">Departs Oct 24, 8:00 AM</p>
+</div>
+<div class="pt-lg border-t border-outline-variant/20 flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary">6 Seats Left</span>
+<span class="font-h3 text-h3 text-on-surface">$12.00</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Nearby Trips Discovery Section -->
+<section class="space-y-md">
+<div class="flex items-center justify-between">
+<h3 class="font-h3 text-h3 text-on-surface">Nearby Trips</h3>
+<div class="flex gap-sm">
+<button class="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center text-outline hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center text-outline hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-md">
+<!-- Nearby Item 1 -->
+<div class="group space-y-md">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean, minimalist architectural detail of a modern university building with sharp geometric lines and large glass panels reflecting a soft lavender sky at dusk. The scene is quiet and orderly, emphasizing the sanctuary aesthetic through a palette of light purples, soft greys, and crisp whites. The lighting is diffused and ethereal, highlighting the premium quality of the campus environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKD7p-7aStKuHzNR2P3dr0hTgsfNFwlCQpwFuqpuvzh7ObYDONELQUAgvNay_FMBtu_J7qI5j_YxotOLhPp9zlbR05wOpA0B3NkBz_C_CSM9MXs2V80rfAwBAbSVKd12WWq-0SalBOPr6JNPaDcOS4pWgWs6rMP9Z9qvmLqIQ7WCW9SugJ3f2muKhERGMXEU6uAyeT50Y6lNZOYqe2m4wZW-SMECwR2dx8XN5IjA-VZj8SxDcTm5WP-hy6Q2VHgPvcoxQ68cLjAl4"/>
+<div class="absolute top-sm right-sm">
+<span class="bg-emerald-500/20 backdrop-blur-md text-emerald-700 text-[10px] uppercase tracking-widest font-bold px-sm py-1 rounded-full border border-emerald-500/10">Active</span>
+</div>
+</div>
+<div class="space-y-xs px-xs">
+<h5 class="font-label-md text-label-md text-on-background line-clamp-1">Downtown Campus Hub</h5>
+<div class="flex items-center justify-between">
+<p class="text-label-sm text-on-surface-variant">0.4 miles away</p>
+<span class="font-label-md text-label-md text-primary">$8</span>
+</div>
+</div>
+</div>
+<!-- Nearby Item 2 -->
+<div class="group space-y-md">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A high-end interior shot of a spacious campus library with rows of light wood desks and ergonomic white chairs. Large windows reveal a peaceful garden outside, with soft natural light filling the room. The color scheme is a sophisticated blend of natural wood tones and the brand's primary purple accents, creating an atmosphere of focused study and tranquility. The photograph is shot with a shallow depth of field, highlighting the premium furniture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbFIYD6lUYcS4FpKQm5mxMlHAu1bQcOa_2NaNUXaZgEW1pWXUB4BnEcc8ZyCAVj0gpHUMxXBq3rxyyZnapt7Qn8RDlqIbauPzXEHp2sUsGKkWBUanxb_wv5EOT7hM9DcUSw-n_v9aswwgq7AaFSaVMzfOYmQpiBNVX1Wn3lv3_bPuEJQz5PVpk9DxPS463Opnj6fWIlinbmcfxsKiwY6VoqDdCzg5O2fEG0hHgmKYQiThie7CnclnufP5pIFwLPMptond8rTmOGrY"/>
+<div class="absolute top-sm right-sm">
+<span class="bg-tertiary-fixed/40 backdrop-blur-md text-on-tertiary-fixed text-[10px] uppercase tracking-widest font-bold px-sm py-1 rounded-full border border-tertiary-fixed/20">Full</span>
+</div>
+</div>
+<div class="space-y-xs px-xs">
+<h5 class="font-label-md text-label-md text-on-background line-clamp-1">Law School Express</h5>
+<div class="flex items-center justify-between">
+<p class="text-label-sm text-on-surface-variant">1.2 miles away</p>
+<span class="font-label-md text-label-md text-primary">$15</span>
+</div>
+</div>
+</div>
+<!-- Nearby Item 3 -->
+<div class="group space-y-md hidden md:block">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An artistic, slightly low-angle shot of a group of modern bikes parked in front of a sleek, glass-fronted university building. The bikes are a uniform soft white color, reflecting the minimalist aesthetic of the app. The background shows a gentle morning fog, with soft purple and blue light filtering through the mist, emphasizing the digital sanctuary theme of calmness and modern mobility. The image quality is crisp and high-contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsFwMNdZSKt_SVaAbTqwUz3IFXXX9N99CNW6bMxCRxIOyVtYTiaGrGQHe7VijxllFKeiG9dYihAa-Y0YKa_0oXRAjn5WDf-aqiK7lzon-S3_WeWZSVGrCcVA-ilIPBq-xZBuCO_trmjZvoGl21zhQcOBRLaeXEaN3mp9snryGg3te9AzwNeUaiPNdAYB5x-3bdx79CCAdeb1j-tLfvdF00YkBczlaR-SunM0tzLy9gQsogCTTExER9Ig2rdWft9r_FsBJK1rtAHJo"/>
+</div>
+<div class="space-y-xs px-xs">
+<h5 class="font-label-md text-label-md text-on-background line-clamp-1">Student Village North</h5>
+<div class="flex items-center justify-between">
+<p class="text-label-sm text-on-surface-variant">2.5 miles away</p>
+<span class="font-label-md text-label-md text-primary">$5</span>
+</div>
+</div>
+</div>
+<!-- Nearby Item 4 -->
+<div class="group space-y-md hidden md:block">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A wide panoramic view of a university stadium at sunset, with the sky showing vibrant gradients of purple, orange, and soft pink. The architectural structure of the stadium is modern and minimalist, with clean lines and glowing LED accents in the primary purple color. The mood is triumphant and inspiring, perfectly capturing the spirit of university life in a high-fidelity, polished photographic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnamTL79BEz6rHzULiuLRdWEaYwOO-tvgFVYaEa9et7c4hBwNg0HWDGNKjR_HUdxY_jE1KUmHK3m3W8Ce-sM9cNQ68U_JemlXQGJiIPnq3bdZRmscDAj3IoBA5-TykMpEOe5Hln7nC0Ax4Gx62uR9iKVgVytuwketNv_20Pc2orLSU-uZNL0Gjx-VG-FzsN3Dg8bt3r_SbtSd_e-DcdEXAd63IA-3DsZAzs05tJsWqIxr8CRf6XhhvR8u3v8oLu-lj5FCF5GES0Rs"/>
+</div>
+<div class="space-y-xs px-xs">
+<h5 class="font-label-md text-label-md text-on-background line-clamp-1">Game Day Shuttle</h5>
+<div class="flex items-center justify-between">
+<p class="text-label-sm text-on-surface-variant">3.1 miles away</p>
+<span class="font-label-md text-label-md text-primary">$20</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/70 backdrop-blur-[12px] shadow-[0_-10px_20px_rgba(124,58,237,0.08)] rounded-t-xl">
+<div class="flex justify-around items-center px-sm pb-lg pt-sm max-w-screen-xl mx-auto">
+<!-- Active Tab: Home -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-2 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-sm text-label-sm">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span class="font-label-sm text-label-sm">Create</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-colors active:scale-90 transition-transform relative" href="#">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="font-label-sm text-label-sm">Messages</span>
+<span class="absolute top-1 right-3 w-2 h-2 bg-primary rounded-full"></span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

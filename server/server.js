@@ -1,15 +1,23 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
+
+const tripRoutes = require('./routes/tripRoutes');
+app.use('/api/trips', tripRoutes);
+
+const messageRoutes = require('./routes/messageRoutes');
+app.use('/api/messages', messageRoutes);
 
 const authMiddleware = require('./middleware/authMiddleware');
 app.get('/api/protected', authMiddleware, (req, res) => {

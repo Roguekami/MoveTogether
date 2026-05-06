@@ -1,13 +1,16 @@
 :root {
   --font-family: 'Inter', sans-serif;
-  --bg-gradient: radial-gradient(circle at 50% 50%, #ffffff 0%, #f3f4f6 100%);
+  --bg-gradient: #f8f9ff;
   --card-bg: #ffffff;
-  --text-main: #111827;
+  --text-main: #121c2a;
   --text-muted: #6b7280;
-  --primary: #6d28d9;
-  --primary-hover: #5b21b6;
+  --primary: #7c3aed;
+  --primary-hover: #630ed4;
   --input-bg: #f3f4f6;
   --border-color: #e5e7eb;
+  --surface-container: #e6eeff;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
 }
 
 * {

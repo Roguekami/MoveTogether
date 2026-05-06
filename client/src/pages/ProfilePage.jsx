@@ -57,7 +57,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (loading) return <div className="loading">Loading Sanctuary...</div>;
+  if (loading) return <div className="loading">Loading MoveTogether...</div>;
 
   return (
     <div className="profile-wrapper">
