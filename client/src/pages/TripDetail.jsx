@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, MapPin, Navigation, Calendar, Users, Wallet, User as UserIcon, Trash2, MessageCircle, X, Check, Edit3, Flag } from 'lucide-react';
 import API from '../api';
+import TripChat from '../components/TripChat';
 import './TripDetail.css';
 
 export default function TripDetail() {
@@ -331,6 +332,11 @@ export default function TripDetail() {
                         )}
                     </div>
                 </div>
+
+                {/* Render TripChat for participants only */}
+                {(isJoined || isCreator) && (
+                    <TripChat tripId={trip._id} currentUser={currentUser} isTerminal={isTerminal} />
+                )}
             </main>
         </div>
     );

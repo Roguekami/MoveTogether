@@ -17,6 +17,10 @@ router.patch('/:id/status', tripController.updateTripStatus);
 
 router.post('/:id/join', tripController.joinTrip);
 router.post('/:id/leave', tripController.leaveTrip);
+
+// Group Chat Routes
+router.get('/:id/messages', tripController.getTripMessages);
+router.post('/:id/messages', tripController.sendTripMessage);
 router.post('/:tripId/accept/:userId', tripController.acceptRequest);
 router.post('/:tripId/reject/:userId', tripController.rejectRequest);
 router.post('/:tripId/remove/:userId', tripController.removeTraveler);

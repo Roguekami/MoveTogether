@@ -1,4 +1,5 @@
 const Trip = require('../models/Trip');
+const TripMessage = require('../models/TripMessage');
 
 // CREATE a new trip
 exports.createTrip = async (req, res) => {
@@ -427,6 +428,73 @@ exports.updateTripStatus = async (req, res) => {
         trip.status = status;
         await trip.save();
         res.json({ message: `Trip status updated to ${status}`, trip });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// GET messages for a specific trip
+exports.getTripMessages = async (req, res) => {
+    try {
+        const tripId = req.params.id;
+        const userId = req.user.id;
+
+        // Check if trip exists
+        const trip = await Trip.findById(tripId);
+        if (!trip) return res.status(404).json({ message: "Trip not found" });
+
+        // Verify user is a participant (creator or traveler)
+        const isParticipant = trip.creator.toString() === userId || trip.travelers.includes(userId);
+        if (!isParticipant) {
+            return res.status(403).json({ message: "Only trip participants can view messages" });
+        }
+
+        const messages = await TripMessage.find({ tripId })
+            .sort({ createdAt: 1 })
+            .populate('sender', 'name');
+
+        res.json({ messages });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// POST send a message to a trip chat
+exports.sendTripMessage = async (req, res) => {
+    try {
+        const tripId = req.params.id;
+        const userId = req.user.id;
+        const { text, latitude, longitude } = req.body;
+
+        // Check if trip exists
+        const trip = await Trip.findById(tripId);
+        if (!trip) return res.status(404).json({ message: "Trip not found" });
+
+        // Verify trip is not terminal
+        if (['completed', 'cancelled'].includes(trip.status)) {
+            return res.status(400).json({ message: "Trip is completed or cancelled, chat is read-only" });
+        }
+
+        // Verify user is a participant
+        const isParticipant = trip.creator.toString() === userId || trip.travelers.includes(userId);
+        if (!isParticipant) {
+            return res.status(403).json({ message: "Only trip participants can send messages" });
+        }
+
+        if (!text && !latitude) {
+            return res.status(400).json({ message: "Message text or location is required" });
+        }
+
+        const message = await TripMessage.create({
+            tripId,
+            sender: userId,
+            text,
+            latitude,
+            longitude
+        });
+
+        const populated = await message.populate('sender', 'name');
+        res.status(201).json({ message: populated });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
