@@ -120,7 +120,7 @@ export default function ProfilePage() {
   };
 
   if (loading) return <div className="loading-screen">Loading Profile...</div>;
-  if (error && !user) return <div className="error-screen" style={{ textAlign: 'center', padding: '50px' }}><h2>{error}</h2><button className="btn-primary" onClick={() => window.location.reload()}>Retry</button></div>;
+  if (error && !user) return <div className="error-screen" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '100px 20px', gap: '20px' }}><h2>{error}</h2><button className="btn-primary" onClick={() => window.location.reload()}>Retry</button></div>;
   if (!user) return <div className="error-screen" style={{ textAlign: 'center', padding: '50px' }}><h2>Profile not found</h2></div>;
 
   const completeness = calculateCompleteness();
