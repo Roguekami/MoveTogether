@@ -4,10 +4,18 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
+const rateLimit = require('express-rate-limit');
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
-router.post('/google', authController.googleLogin);
+// Strict Auth Limiter: Max 5 requests per 15 minutes per IP
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: 'Too many authentication attempts, please try again after 15 minutes'
+});
+
+router.post('/register', authLimiter, authController.register);
+router.post('/login', authLimiter, authController.login);
+router.post('/google', authLimiter, authController.googleLogin);
 router.post('/logout', authMiddleware, authController.logout);
 
 // Wrapper to handle multer errors
