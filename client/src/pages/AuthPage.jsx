@@ -234,20 +234,10 @@ export default function AuthPage() {
           </div>
         </div>
 
-        <p className="auth-footer-text">
-          By continuing, you agree to our{' '}
-          <a href="#">Safety Guidelines</a> and <a href="#">Terms of Service</a>.
-        </p>
       </div>
 
       <footer className="auth-page-footer">
-        <span>MoveTogether &copy; 2024. A Social Sanctuary for Student Travel.</span>
-        <nav>
-          <a href="#">About Us</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Safety Guidelines</a>
-          <a href="#">Contact Support</a>
-        </nav>
+        <span>MoveTogether &copy; 2026.</span>
       </footer>
     </div>
   );
