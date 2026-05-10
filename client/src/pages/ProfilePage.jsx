@@ -114,7 +114,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (loading) return <div className="loading">Loading MoveTogether...</div>;
+  if (loading) return <div className="loading-screen">Loading Profile...</div>;
 
   const completeness = calculateCompleteness();
 
