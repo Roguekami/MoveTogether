@@ -311,12 +311,6 @@
     flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-    .nearby-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
-}
 
 .nearby-card {
     cursor: pointer;
