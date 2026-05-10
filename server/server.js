@@ -7,6 +7,8 @@ const { Server } = require('socket.io');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const app = express();
+// Trust the first proxy (Render load balancer) so rate limiting works correctly per-user IP
+app.set('trust proxy', 1);
 const server = http.createServer(app);
 
 // Socket.io setup
