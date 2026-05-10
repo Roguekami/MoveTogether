@@ -123,3 +123,15 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     pointer-events: none;
     z-index: 1;
 }
+
+.loading-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-main, #ffffff);
+    color: var(--primary, #7c3aed);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+}

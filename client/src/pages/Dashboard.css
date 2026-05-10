@@ -384,4 +384,7 @@
     justify-content: center;
     color: var(--primary);
     font-weight: 600;
+    background: var(--bg-main, #ffffff);
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
 }
