@@ -119,7 +119,7 @@ const AdminDashboard = () => {
         </div>
 
         {error && <p className="error-msg">{error}</p>}
-        {loading && <div className="loading">Loading...</div>}
+        {loading && <div className="loading-screen">Loading Admin Dashboard...</div>}
 
         {!loading && view === 'stats' && (
           <div className="stats-grid">

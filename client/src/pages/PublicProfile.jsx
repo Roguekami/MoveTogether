@@ -62,7 +62,7 @@ export default function PublicProfile() {
     }
   };
 
-  if (loading) return <div className="loading">Loading Profile...</div>;
+  if (loading) return <div className="loading-screen">Loading Profile...</div>;
   if (error) return <div className="profile-wrapper"><div className="error-msg">{error}</div></div>;
   if (!user) return <div className="profile-wrapper"><div className="error-msg">User not found</div></div>;
 
