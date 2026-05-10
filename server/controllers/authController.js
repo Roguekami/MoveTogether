@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
 const { notifyPasswordReset } = require('../utils/emailService');
 
 // ... existing methods ...
@@ -141,6 +142,80 @@ exports.register = async (req, res) => {
     }
 };
 
+// GOOGLE LOGIN
+exports.googleLogin = async (req, res) => {
+    try {
+        const { credential } = req.body;
+        
+        if (!credential) {
+            return res.status(400).json({ message: "No Google token provided" });
+        }
+
+        // Fetch user info from Google using the access token
+        const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${credential}` }
+        });
+
+        if (!response.ok) {
+            return res.status(400).json({ message: "Invalid Google token" });
+        }
+
+        const payload = await response.json();
+        const { email, name, picture, email_verified } = payload;
+
+        if (!email_verified) {
+            return res.status(400).json({ message: "Google email not verified" });
+        }
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            // Create a random strong password for Google signups
+            const randomPassword = crypto.randomBytes(16).toString('hex') + 'A1!';
+            const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+            user = await User.create({
+                name,
+                email,
+                password: hashedPassword,
+                isEmailVerified: true,
+                profilePicture: picture,
+                bio: "Joined via Google"
+            });
+        }
+
+        if (user.isSuspended) {
+            return res.status(403).json({ message: "Account suspended. Contact admin." });
+        }
+
+        // Generate JWT
+        if (!process.env.JWT_SECRET) {
+            return res.status(500).json({ message: "JWT secret not set" });
+        }
+
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        res.json({
+            message: "Login successful",
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                profilePicture: user.profilePicture
+            }
+        });
+
+    } catch (err) {
+        console.error("Google Auth Error:", err);
+        res.status(500).json({ message: err.message });
+    }
+};
 
 // LOGIN
 exports.login = async (req, res) => {

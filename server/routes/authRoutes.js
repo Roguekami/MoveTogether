@@ -7,6 +7,7 @@ const upload = require('../middleware/uploadMiddleware');
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.post('/google', authController.googleLogin);
 router.post('/logout', authMiddleware, authController.logout);
 
 // Wrapper to handle multer errors
