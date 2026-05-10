@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Trip = require('../models/Trip');
 const Report = require('../models/Report');
+const { notifyReportResolved } = require('../utils/emailService');
 
 // Get all users with stats
 exports.getUsers = async (req, res) => {
@@ -37,6 +38,31 @@ exports.suspendUser = async (req, res) => {
     await user.save();
     
     res.json({ message: `User ${user.isSuspended ? 'suspended' : 'unsuspended'}`, user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Delete user account
+exports.deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (user.role === 'admin') return res.status(403).json({ error: 'Cannot delete admin accounts' });
+
+    // Remove user from all trips they joined
+    await Trip.updateMany(
+      { travelers: user._id },
+      { $pull: { travelers: user._id } }
+    );
+
+    // Delete all trips created by user
+    await Trip.deleteMany({ creator: user._id });
+
+    // Delete the user
+    await User.findByIdAndDelete(req.params.id);
+
+    res.json({ message: 'User account deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -79,16 +105,6 @@ exports.getReports = async (req, res) => {
   }
 };
 
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
-});
-
 // Resolve report
 exports.resolveReport = async (req, res) => {
   try {
@@ -101,23 +117,13 @@ exports.resolveReport = async (req, res) => {
     report.status = 'resolved';
     await report.save();
     
-    // Send email notification if transporter is configured
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-        await transporter.sendMail({
-          from: process.env.EMAIL_USER,
-          to: report.reporterId.email,
-          subject: 'Your Report Has Been Resolved',
-          html: `
-            <h3>Report Update</h3>
-            <p>Hi ${report.reporterId.name},</p>
-            <p>Your report regarding <strong>${report.reportedUserId.name}</strong> has been reviewed and resolved by our admin team.</p>
-            <p><strong>Reason:</strong> ${report.reason}</p>
-            <p>Thank you for helping keep MoveTogether safe!</p>
-          `
-        });
-    } else {
-        console.warn("EMAIL_USER or EMAIL_PASSWORD not set. Report resolution email skipped.");
-    }
+    // Send email notification via Brevo
+    await notifyReportResolved(
+      report.reporterId.email,
+      report.reporterId.name,
+      report.reportedUserId.name,
+      report.reason
+    );
     
     res.json({ message: 'Report resolved and reporter notified', report });
   } catch (error) {

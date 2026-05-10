@@ -84,6 +84,17 @@ const AdminDashboard = () => {
     }
   };
 
+  const deleteUser = async (userId) => {
+    if (!window.confirm('Are you sure you want to permanently delete this user and all their trips? This action cannot be undone.')) return;
+    try {
+      await API.delete(`/admin/users/${userId}`);
+      fetchUsers(); // Refresh the list
+      fetchStats(); // Update totals
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to delete user');
+    }
+  };
+
   const deleteTrip = async (tripId) => {
     if (!window.confirm('Are you sure you want to delete this trip? This action cannot be undone.')) return;
     try {
@@ -175,12 +186,21 @@ const AdminDashboard = () => {
                     </td>
                     <td>
                       {user.role !== 'admin' && (
-                        <button 
-                          className={`btn-action ${user.isSuspended ? 'unsuspend' : 'suspend'}`}
-                          onClick={() => suspendUser(user._id)}
-                        >
-                          {user.isSuspended ? 'Unsuspend' : 'Suspend'}
-                        </button>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button 
+                            className={`btn-action ${user.isSuspended ? 'unsuspend' : 'suspend'}`}
+                            onClick={() => suspendUser(user._id)}
+                          >
+                            {user.isSuspended ? 'Unsuspend' : 'Suspend'}
+                          </button>
+                          <button 
+                            className="btn-action delete-user-btn"
+                            style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}
+                            onClick={() => deleteUser(user._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>

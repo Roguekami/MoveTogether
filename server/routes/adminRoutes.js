@@ -6,6 +6,7 @@ const checkSuspended = require('../middleware/checkSuspended');
 const {
   getUsers,
   suspendUser,
+  deleteUser,
   getTrips,
   deleteTrip,
   getReports,
@@ -19,6 +20,7 @@ router.use(isAdmin);   // All routes need admin role
 
 router.get('/users', getUsers);
 router.put('/users/:id/suspend', suspendUser);
+router.delete('/users/:id', deleteUser);
 router.get('/trips', getTrips);
 router.delete('/trips/:id', deleteTrip);
 router.get('/reports', getReports);

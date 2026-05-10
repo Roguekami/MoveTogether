@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { OAuth2Client } = require('google-auth-library');
-const { notifyPasswordReset } = require('../utils/emailService');
+const { notifyPasswordReset, notifyVerificationCode } = require('../utils/emailService');
 
 // ... existing methods ...
 
@@ -125,6 +125,9 @@ exports.register = async (req, res) => {
         console.log(`User: ${user.name} (${user.email})`);
         console.log(`Code: ${verificationCode}`);
         console.log('=============================================\n');
+
+        // Send verification code via email
+        await notifyVerificationCode(user.email, user.name, verificationCode);
 
         res.status(201).json({
             message: "User created successfully. Please verify your email.",
@@ -480,6 +483,9 @@ exports.resendCode = async (req, res) => {
         console.log(`Email: ${user.email}`);
         console.log(`Code: ${newCode}`);
         console.log('=============================================\n');
+
+        // Send verification code via email
+        await notifyVerificationCode(user.email, user.name, newCode);
 
         res.json({ message: "Verification code resent" });
     } catch (err) {

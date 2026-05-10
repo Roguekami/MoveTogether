@@ -98,10 +98,35 @@ const notifyPasswordReset = async (userEmail, userName, resetToken) => {
     `);
 };
 
+const notifyVerificationCode = async (userEmail, userName, code) => {
+    await sendEmail(userEmail, `Your MoveTogether Verification Code`, `
+        <h3>Email Verification</h3>
+        <p>Hi ${userName},</p>
+        <p>Welcome to MoveTogether! Your verification code is:</p>
+        <div style="text-align:center;margin:20px 0;">
+            <span style="display:inline-block;padding:16px 32px;background-color:#7c3aed;color:white;font-size:28px;font-weight:bold;letter-spacing:6px;border-radius:12px;">${code}</span>
+        </div>
+        <p>Enter this code in the app to verify your email address.</p>
+        <p>Thanks,<br>The MoveTogether Team</p>
+    `);
+};
+
+const notifyReportResolved = async (reporterEmail, reporterName, reportedUserName, reason) => {
+    await sendEmail(reporterEmail, `Your Report Has Been Resolved`, `
+        <h3>Report Update</h3>
+        <p>Hi ${reporterName},</p>
+        <p>Your report regarding <strong>${reportedUserName}</strong> has been reviewed and resolved by our admin team.</p>
+        <p><strong>Reason:</strong> ${reason}</p>
+        <p>Thank you for helping keep MoveTogether safe!</p>
+    `);
+};
+
 module.exports = {
     sendEmail,
     notifyNewJoinRequest,
     notifyRequestAccepted,
     notifyTripStatusChange,
-    notifyPasswordReset
+    notifyPasswordReset,
+    notifyVerificationCode,
+    notifyReportResolved
 };
