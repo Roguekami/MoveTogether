@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { MapPin, Menu, X, Home, Search, PlusCircle, MessageCircle, User as UserIcon, Shield, Moon, Sun, Bell } from 'lucide-react';
+import { MapPin, Menu, X, Home, Search, PlusCircle, MessageCircle, User as UserIcon, Shield, Moon, Sun, Bell, LogOut } from 'lucide-react';
 import { io } from 'socket.io-client';
 import API from '../api';
 import './Navbar.css';
@@ -215,6 +215,19 @@ export default function Navbar() {
                             <span>{link.name}</span>
                         </NavLink>
                     ))}
+                    {userId && (
+                        <button 
+                            className="mobile-nav-link mobile-logout-btn"
+                            onClick={() => {
+                                closeMenu();
+                                localStorage.clear();
+                                window.location.reload();
+                            }}
+                        >
+                            <LogOut size={24} />
+                            <span>Log Out</span>
+                        </button>
+                    )}
                 </div>
             </div>
         </>

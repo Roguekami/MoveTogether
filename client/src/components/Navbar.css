@@ -147,6 +147,19 @@
     box-shadow: 0 8px 20px rgba(124, 58, 237, 0.2);
 }
 
+.mobile-logout-btn {
+    border: none;
+    cursor: pointer;
+    margin-top: 16px;
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.08);
+    border-top: 1px solid var(--border-color);
+}
+
+.mobile-logout-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+}
+
 /* Right Actions Container */
 .navbar-right-actions {
     display: flex;
