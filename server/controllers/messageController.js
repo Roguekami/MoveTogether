@@ -12,8 +12,8 @@ exports.getConversations = async (req, res) => {
             $or: [{ sender: userId }, { receiver: userId }]
         })
         .sort({ createdAt: -1 })
-        .populate('sender', 'name')
-        .populate('receiver', 'name');
+        .populate('sender', 'name profilePicture')
+        .populate('receiver', 'name profilePicture');
 
         // Group by conversationId, keep the latest message per conversation
         const conversationMap = {};
@@ -55,8 +55,8 @@ exports.getMessages = async (req, res) => {
 
         const messages = await Message.find({ conversationId })
             .sort({ createdAt: 1 })
-            .populate('sender', 'name')
-            .populate('receiver', 'name');
+            .populate('sender', 'name profilePicture')
+            .populate('receiver', 'name profilePicture');
 
         // Mark messages as read
         await Message.updateMany(
@@ -65,7 +65,7 @@ exports.getMessages = async (req, res) => {
         );
 
         // Get recipient info
-        const recipient = await User.findById(recipientId).select('name bio');
+        const recipient = await User.findById(recipientId).select('name bio profilePicture');
 
         res.json({ messages, recipient });
     } catch (err) {
@@ -110,7 +110,12 @@ exports.sendMessage = async (req, res) => {
                 type: 'new_message',
                 message: `New message from ${populated.sender.name}`
             });
+            // Tell the recipient's UI to update their notification count
+            req.io.to(recipientId).emit('new-notification');
         }
+
+        // Also emit the real-time message so if they are on the chat page, it updates!
+        req.io.to(recipientId).emit('receive-message', populated);
 
         res.status(201).json({ message: populated });
     } catch (err) {
@@ -138,4 +143,15 @@ exports.deleteMessage = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
-
+// GET total unread message count
+exports.getUnreadCount = async (req, res) => {
+    try {
+        const count = await Message.countDocuments({
+            receiver: req.user.id,
+            read: false
+        });
+        res.json({ unreadCount: count });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};

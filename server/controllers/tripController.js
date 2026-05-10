@@ -641,7 +641,7 @@ exports.getTripMessages = async (req, res) => {
         
         // Fetch messages with sender details
         const messages = await TripMessage.find({ tripId })
-            .populate('sender', 'name')
+            .populate('sender', 'name profilePicture')
             .sort({ createdAt: 1 })
             .limit(100);
             
@@ -692,7 +692,7 @@ exports.sendTripMessage = async (req, res) => {
         });
         
         // Populate sender details before returning
-        await message.populate('sender', 'name');
+        await message.populate('sender', 'name profilePicture');
         
         // Emit to trip room via Socket.io
         const io = req.app.get('io');

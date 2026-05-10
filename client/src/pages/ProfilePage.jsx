@@ -93,6 +93,11 @@ export default function ProfilePage() {
 
       const res = await API.put('/auth/profile', formData);
       setUser(res.data.user);
+      
+      // Update local storage so navbar sees the new picture immediately
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      localStorage.setItem('user', JSON.stringify({ ...storedUser, ...res.data.user, profilePicture: res.data.user.profilePicture }));
+
       if (res.data.user.profilePicture) setProfilePicPreview(res.data.user.profilePicture);
       setProfilePicFile(null);
       setMessage('Profile updated successfully!');

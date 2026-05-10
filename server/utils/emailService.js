@@ -1,5 +1,5 @@
-const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+const path = require('path');
 
 const isConfigured = () => {
     return process.env.BREVO_API_KEY && process.env.EMAIL_USER;

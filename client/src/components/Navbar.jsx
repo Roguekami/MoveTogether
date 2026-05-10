@@ -52,6 +52,7 @@ export default function Navbar() {
     }
 
     const [notifications, setNotifications] = useState([]);
+    const [unreadMessageCount, setUnreadMessageCount] = useState(0);
     const [showNotifs, setShowNotifs] = useState(false);
     const notifRef = useRef(null);
 
@@ -65,10 +66,21 @@ export default function Navbar() {
         }
     };
 
+    const fetchUnreadMessages = async () => {
+        if (!userId) return;
+        try {
+            const res = await API.get('/messages/unread-count');
+            setUnreadMessageCount(res.data.unreadCount);
+        } catch (err) {
+            console.error("Failed to fetch unread messages", err);
+        }
+    };
+
     useEffect(() => {
         if (!userId) return;
         
         fetchNotifications();
+        fetchUnreadMessages();
 
         const backendUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
         const socket = io(backendUrl);
@@ -77,6 +89,12 @@ export default function Navbar() {
         });
 
         socket.on('new-notification', () => {
+            fetchNotifications();
+        });
+
+        socket.on('receive-message', () => {
+            fetchUnreadMessages();
+            // Also refresh notifications since a new message creates a notification
             fetchNotifications();
         });
 
@@ -143,6 +161,9 @@ export default function Navbar() {
                                     <link.icon size={18} />
                                 )}
                                 <span>{link.name}</span>
+                                {link.name === 'Messages' && unreadMessageCount > 0 && (
+                                    <span className="nav-badge">{unreadMessageCount}</span>
+                                )}
                             </NavLink>
                         ))}
                     </div>
@@ -217,6 +238,9 @@ export default function Navbar() {
                                 <link.icon size={24} />
                             )}
                             <span>{link.name}</span>
+                            {link.name === 'Messages' && unreadMessageCount > 0 && (
+                                <span className="nav-badge-mobile">{unreadMessageCount}</span>
+                            )}
                         </NavLink>
                     ))}
                     {userId && (

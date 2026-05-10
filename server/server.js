@@ -53,6 +53,12 @@ app.get('/api/protected', authMiddleware, (req, res) => {
     });
 });
 
+// Socket.io middleware
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
 // Test route
 app.get('/', (req, res) => {
     res.send('MoveTogether API is running...');

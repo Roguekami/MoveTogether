@@ -109,8 +109,16 @@ export default function Messages() {
                             <ArrowLeft size={20} />
                         </button>
                         <div className="chat-header-info">
-                            <div className="chat-avatar">
-                                <UserIcon size={18} />
+                            <div className="chat-avatar" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                {recipient?.profilePicture ? (
+                                    <img 
+                                        src={recipient.profilePicture.startsWith('http') ? recipient.profilePicture : `${import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000'}${recipient.profilePicture}`} 
+                                        alt={recipient.name} 
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                    />
+                                ) : (
+                                    <UserIcon size={18} />
+                                )}
                             </div>
                             <h3>{recipient?.name || 'Loading...'}</h3>
                         </div>
@@ -204,8 +212,16 @@ export default function Messages() {
                                 className="conversation-item card-shadow"
                                 onClick={() => navigate(`/messages/${convo.otherUser._id}`)}
                             >
-                                <div className="convo-avatar">
-                                    <UserIcon size={20} />
+                                <div className="convo-avatar" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    {convo.otherUser?.profilePicture ? (
+                                        <img 
+                                            src={convo.otherUser.profilePicture.startsWith('http') ? convo.otherUser.profilePicture : `${import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000'}${convo.otherUser.profilePicture}`} 
+                                            alt={convo.otherUser.name} 
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                        />
+                                    ) : (
+                                        <UserIcon size={20} />
+                                    )}
                                 </div>
                                 <div className="convo-info">
                                     <div className="convo-top-row">
