@@ -1,37 +1,41 @@
-const nodemailer = require('nodemailer');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-    }
-});
-
 const isConfigured = () => {
-    return process.env.EMAIL_USER && 
-           process.env.EMAIL_PASSWORD && 
-           process.env.EMAIL_USER !== 'your-email@gmail.com';
+    return process.env.BREVO_API_KEY && process.env.EMAIL_USER;
 };
 
-// Send email (fails silently if not configured)
+// Send email via Brevo REST API (bypasses Render SMTP block)
 const sendEmail = async (to, subject, html) => {
     if (!isConfigured()) {
         console.log(`📧 [DEV] Email skipped (not configured): "${subject}" to ${to}`);
         return;
     }
     try {
-        await transporter.sendMail({
-            from: `"MoveTogether" <${process.env.EMAIL_USER}>`,
-            to,
-            subject,
-            html
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'api-key': process.env.BREVO_API_KEY,
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                sender: {  
+                    name: "MoveTogether", 
+                    email: process.env.EMAIL_USER 
+                },
+                to: [{ email: to }],
+                subject: subject,
+                htmlContent: html
+            })
         });
-        console.log(`📧 Email sent: "${subject}" to ${to}`);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Brevo API Error: ${errorText}`);
+        }
+        
+        console.log(`📧 Email sent successfully via Brevo: "${subject}" to ${to}`);
     } catch (err) {
         console.error(`📧 Email failed: ${err.message}`);
     }
