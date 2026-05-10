@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, MapPin, Loader } from 'lucide-react';
+import { Send, MapPin, Loader, Wifi, WifiOff, Trash2 } from 'lucide-react';
+import { io } from 'socket.io-client';
 import API from '../api';
 import './TripChat.css';
 
@@ -10,21 +11,16 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
     const [sending, setSending] = useState(false);
     const [locating, setLocating] = useState(false);
     const [error, setError] = useState('');
+    const [connected, setConnected] = useState(false);
     
     const messagesEndRef = useRef(null);
+    const socketRef = useRef(null);
 
+    // Initial message fetch
     const fetchMessages = async () => {
         try {
             const res = await API.get(`/trips/${tripId}/messages`);
-            // Only update if lengths differ or last message differs to avoid unnecessary re-renders
-            setMessages(prev => {
-                const newMsgs = res.data.messages;
-                if (prev.length !== newMsgs.length || 
-                   (prev.length > 0 && prev[prev.length-1]._id !== newMsgs[newMsgs.length-1]._id)) {
-                    return newMsgs;
-                }
-                return prev;
-            });
+            setMessages(res.data.messages);
         } catch (err) {
             console.error("Failed to fetch messages:", err);
         } finally {
@@ -32,13 +28,45 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
         }
     };
 
-    // Polling setup
+    // Socket.io setup
     useEffect(() => {
+        // Fetch initial messages
         fetchMessages();
-        const interval = setInterval(() => {
-            fetchMessages();
-        }, 5000);
-        return () => clearInterval(interval);
+
+        // Connect to Socket.io
+        // Use the backend URL from environment variables, or fallback to localhost
+        const backendUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+        const socket = io(backendUrl);
+        socketRef.current = socket;
+
+        socket.on('connect', () => {
+            setConnected(true);
+            socket.emit('join-trip', tripId);
+        });
+
+        socket.on('disconnect', () => {
+            setConnected(false);
+        });
+
+        // Listen for real-time messages
+        socket.on('receive-message', (msg) => {
+            setMessages(prev => {
+                // Avoid duplicates
+                if (prev.some(m => m._id === msg._id)) return prev;
+                return [...prev, msg];
+            });
+        });
+
+        // Listen for deleted messages
+        socket.on('message-deleted', (msgId) => {
+            setMessages(prev => prev.filter(m => m._id !== msgId));
+        });
+
+        // Cleanup on unmount
+        return () => {
+            socket.emit('leave-trip', tripId);
+            socket.disconnect();
+        };
     }, [tripId]);
 
     // Auto-scroll to bottom
@@ -57,7 +85,7 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
         try {
             await API.post(`/trips/${tripId}/messages`, { text: newMessage });
             setNewMessage('');
-            fetchMessages(); // Instantly fetch to update UI
+            // No need to fetchMessages — the socket 'receive-message' event handles it
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to send message');
         } finally {
@@ -78,11 +106,10 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
             async (position) => {
                 try {
                     await API.post(`/trips/${tripId}/messages`, {
-                        text: "Shared a location",
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude
                     });
-                    fetchMessages();
+                    // Socket will handle the update
                 } catch (err) {
                     setError('Failed to share location');
                 } finally {
@@ -96,13 +123,30 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
         );
     };
 
+    const handleDeleteMessage = async (messageId) => {
+        if (!window.confirm('Delete this message?')) return;
+        try {
+            await API.delete(`/trips/${tripId}/messages/${messageId}`);
+            setMessages(prev => prev.filter(m => m._id !== messageId));
+        } catch (err) {
+            setError('Failed to delete message');
+        }
+    };
+
     if (loading) return <div className="chat-loading">Loading chat...</div>;
 
     return (
         <div className="trip-chat-container card-shadow">
             <div className="chat-header">
                 <h3>Trip Group Chat</h3>
-                {isTerminal && <span className="read-only-badge">Read Only</span>}
+                <div className="chat-header-right">
+                    {connected ? (
+                        <span className="connection-badge live"><Wifi size={14} /> Live</span>
+                    ) : (
+                        <span className="connection-badge offline"><WifiOff size={14} /> Offline</span>
+                    )}
+                    {isTerminal && <span className="read-only-badge">Read Only</span>}
+                </div>
             </div>
             
             <div className="chat-messages">
@@ -112,18 +156,58 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
                     </div>
                 ) : (
                     messages.map((msg, index) => {
-                        const isMe = msg.sender._id === currentUser.id;
-                        const showName = !isMe && (index === 0 || messages[index - 1].sender._id !== msg.sender._id);
+                        if (msg.messageType === 'system') {
+                            return (
+                                <div key={msg._id} className="system-message">
+                                    <i>ℹ️ {msg.text}</i>
+                                </div>
+                            );
+                        }
+
+                        const isMe = msg.sender && msg.sender._id === currentUser.id;
+                        const showName = !isMe && msg.sender && (index === 0 || (messages[index - 1].sender && messages[index - 1].sender._id !== msg.sender._id));
 
                         return (
                             <div key={msg._id} className={`message-wrapper ${isMe ? 'message-mine' : 'message-theirs'}`}>
-                                {showName && <span className="sender-name">{msg.sender.name}</span>}
-                                <div className="message-bubble">
-                                    {msg.text && <p className="message-text">{msg.text}</p>}
-                                    {msg.latitude && msg.longitude && (
+                                {showName && (
+                                    <div className="sender-name-row" style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '2px' }}>
+                                        <div 
+                                            className="sender-avatar-tiny" 
+                                            style={{ width: '18px', height: '18px', borderRadius: '50%', overflow: 'hidden', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                        >
+                                            {msg.sender.profilePicture ? (
+                                                <img 
+                                                    src={msg.sender.profilePicture.startsWith('http') ? msg.sender.profilePicture : `${import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000'}${msg.sender.profilePicture}`} 
+                                                    alt="" 
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                                />
+                                            ) : (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                            )}
+                                        </div>
+                                        <span 
+                                            className="sender-name hover-underline" 
+                                            style={{ cursor: 'pointer', margin: 0 }}
+                                            onClick={() => window.location.href = `/user/${msg.sender._id}`}
+                                        >
+                                            {msg.sender.name}
+                                        </span>
+                                        <button 
+                                            className="btn-icon" 
+                                            onClick={() => window.location.href = `/messages/${msg.sender._id}`}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', padding: '2px' }}
+                                            title={`Message ${msg.sender.name}`}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
+                                        </button>
+                                    </div>
+                                )}
+                                <div className="message-bubble" style={{ position: 'relative' }}>
+                                    {msg.messageType === 'text' && <p className="message-text">{msg.text}</p>}
+                                    {msg.messageType === 'location' && (
                                         <div className="location-attachment">
                                             <MapPin size={16} />
-                                            <span>{msg.latitude.toFixed(4)}, {msg.longitude.toFixed(4)}</span>
+                                            <span>{msg.latitude?.toFixed(4)}, {msg.longitude?.toFixed(4)}</span>
                                             <a 
                                                 href={`https://www.google.com/maps/search/?api=1&query=${msg.latitude},${msg.longitude}`} 
                                                 target="_blank" 
@@ -137,6 +221,22 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
                                     <span className="message-time">
                                         {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
+                                    {isMe && msg.messageType !== 'system' && (
+                                        <button
+                                            onClick={() => handleDeleteMessage(msg._id)}
+                                            title="Delete message"
+                                            style={{
+                                                position: 'absolute', top: '4px', right: '4px',
+                                                background: 'none', border: 'none', cursor: 'pointer',
+                                                color: 'rgba(255,255,255,0.5)', padding: '2px',
+                                                display: 'flex', alignItems: 'center', opacity: 0,
+                                                transition: 'opacity 0.2s'
+                                            }}
+                                            className="msg-delete-btn"
+                                        >
+                                            <Trash2 size={11} />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         );
@@ -165,6 +265,7 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
                     placeholder={isTerminal ? "Chat is closed" : "Type a message..."}
                     className="chat-input"
                     disabled={isTerminal || sending || locating}
+                    maxLength={1000}
                 />
                 
                 <button 

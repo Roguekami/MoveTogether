@@ -8,6 +8,11 @@ import TripDetail from './pages/TripDetail';
 import ProfilePage from './pages/ProfilePage';
 import Explore from './pages/Explore';
 import Messages from './pages/Messages';
+import CheckEmailPage from './pages/CheckEmailPage';
+import PublicProfile from './pages/PublicProfile';
+import AdminDashboard from './pages/AdminDashboard';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Layout from './components/Layout';
 
 const PrivateRoute = ({ children }) => {
@@ -20,6 +25,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/verify-email" element={<CheckEmailPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         
         {/* Protected Routes */}
         <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
@@ -30,6 +38,14 @@ function App() {
         <Route path="/messages" element={<PrivateRoute><Messages /></PrivateRoute>} />
         <Route path="/messages/:recipientId" element={<PrivateRoute><Messages /></PrivateRoute>} />
         <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+        <Route path="/user/:id" element={<PrivateRoute><PublicProfile /></PrivateRoute>} />
+        
+        {/* Admin Route */}
+        <Route path="/admin" element={
+          <PrivateRoute>
+            <AdminDashboard />
+          </PrivateRoute>
+        } />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" />} />

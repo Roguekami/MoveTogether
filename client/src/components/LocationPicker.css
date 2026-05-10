@@ -1,0 +1,221 @@
+.location-picker-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.location-picker-modal {
+    background: var(--card-bg);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.picker-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.picker-close {
+    background: var(--surface-container);
+    border: none;
+    color: var(--text-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.picker-close:hover {
+    background: #ef4444;
+    color: white;
+}
+
+.picker-search {
+    position: relative;
+    padding: 16px 24px 8px;
+}
+
+.picker-search input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.picker-search input:focus {
+    border-color: var(--primary);
+}
+
+.picker-search-icon {
+    position: absolute;
+    top: 30px;
+    left: 38px;
+    color: var(--text-muted);
+}
+
+.picker-searching {
+    padding: 8px 0;
+    font-size: 13px;
+    color: var(--primary);
+}
+
+.picker-results {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    max-height: 180px;
+    overflow-y: auto;
+    background: var(--card-bg);
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    z-index: 10;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.picker-results li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.15s;
+}
+
+.picker-results li:last-child {
+    border-bottom: none;
+}
+
+.picker-results li:hover {
+    background: var(--surface-container);
+}
+
+.picker-results li svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--primary);
+}
+
+.picker-hint {
+    padding: 0 24px 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.picker-map-container {
+    height: 350px;
+    margin: 0 24px 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.picker-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Pin on Map button */
+.pin-map-btn {
+    background: var(--surface-container);
+    border: 1px solid var(--border-color);
+    color: var(--primary);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.pin-map-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.pin-map-btn.has-pin {
+    background: #dcfce7;
+    color: #16a34a;
+    border-color: #86efac;
+}
+
+.input-with-pin {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.input-with-pin .input-wrapper {
+    flex: 1;
+}
+
+@media (max-width: 600px) {
+    .location-picker-modal {
+        max-height: 95vh;
+        border-radius: 16px;
+    }
+
+    .picker-map-container {
+        height: 250px;
+    }
+
+    .pin-map-btn span {
+        display: none;
+    }
+}

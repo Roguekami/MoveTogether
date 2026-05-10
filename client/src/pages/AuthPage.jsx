@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AtSign, Lock } from 'lucide-react';
+import { AtSign, Lock, Eye, EyeOff } from 'lucide-react';
 import API from '../api';
 import './AuthPage.css';
 
@@ -11,6 +11,7 @@ export default function AuthPage() {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,8 +39,8 @@ export default function AuthPage() {
           email: form.email,
           password: form.password,
         });
-        alert(`Account created! Welcome, ${res.data.user.name}! Please log in.`);
-        setMode('login');
+        alert(`Account created! Please check your email for the verification code.`);
+        navigate('/verify-email', { state: { email: form.email } });
       } else if (mode === 'forgot') {
         await API.post('/auth/forgot-password', {
           email: form.email
@@ -156,21 +157,48 @@ export default function AuthPage() {
                 <div className="input-label-row">
                   <label className="input-label">{mode === 'reset' ? 'NEW PASSWORD' : 'PASSWORD'}</label>
                   {mode === 'login' && (
-                    <button type="button" className="forgot-link" onClick={() => setMode('forgot')}>Forgot?</button>
+                    <button type="button" className="forgot-link" onClick={() => navigate('/forgot-password')}>Forgot?</button>
                   )}
                 </div>
                 <div className="input-wrapper">
                   <input
                     className="input-soft"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder={mode === 'reset' ? 'Enter new password' : 'Your password'}
                     value={form.password}
                     onChange={handleChange}
                     required
                   />
-                  <Lock size={16} className="input-icon" />
+                  <div style={{ display: 'flex', alignItems: 'center', position: 'absolute', right: '16px' }}>
+                    <button 
+                      type="button" 
+                      onClick={() => setShowPassword(!showPassword)}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </div>
+                {(mode === 'signup' || mode === 'reset') && form.password.length > 0 && (
+                  <div className="password-requirements" style={{ marginTop: '10px', fontSize: '11px', color: 'var(--text-muted)' }}>
+                    <p style={{ margin: '2px 0', color: form.password.length >= 8 ? '#10b981' : '#ef4444' }}>
+                      {form.password.length >= 8 ? '✓' : '○'} At least 8 characters
+                    </p>
+                    <p style={{ margin: '2px 0', color: /[A-Z]/.test(form.password) ? '#10b981' : '#ef4444' }}>
+                      {/[A-Z]/.test(form.password) ? '✓' : '○'} One uppercase letter
+                    </p>
+                    <p style={{ margin: '2px 0', color: /[a-z]/.test(form.password) ? '#10b981' : '#ef4444' }}>
+                      {/[a-z]/.test(form.password) ? '✓' : '○'} One lowercase letter
+                    </p>
+                    <p style={{ margin: '2px 0', color: /\d/.test(form.password) ? '#10b981' : '#ef4444' }}>
+                      {/\d/.test(form.password) ? '✓' : '○'} One number
+                    </p>
+                    <p style={{ margin: '2px 0', color: /[^A-Za-z0-9]/.test(form.password) ? '#10b981' : '#ef4444' }}>
+                      {/[^A-Za-z0-9]/.test(form.password) ? '✓' : '○'} One special character
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 

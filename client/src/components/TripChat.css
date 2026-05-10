@@ -34,6 +34,32 @@
     font-weight: 600;
 }
 
+.chat-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.connection-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.connection-badge.live {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.connection-badge.offline {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
 .chat-messages {
     flex: 1;
     padding: 20px;
@@ -93,7 +119,7 @@
 }
 
 .message-theirs .message-bubble {
-    background: white;
+    background: var(--card-bg);
     color: var(--text-main);
     border-bottom-left-radius: 4px;
     border: 1px solid var(--border-color);
@@ -112,6 +138,21 @@
     margin-top: 6px;
     text-align: right;
     opacity: 0.7;
+}
+
+.system-message {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin: 8px 0;
+    width: 100%;
+}
+
+.system-message i {
+    font-style: normal;
+    background: #f3f4f6;
+    padding: 4px 12px;
+    border-radius: 12px;
 }
 
 .location-attachment {
@@ -140,7 +181,7 @@
     display: flex;
     padding: 16px;
     gap: 12px;
-    background: white;
+    background: var(--card-bg);
     border-top: 1px solid var(--border-color);
     align-items: center;
 }
@@ -224,4 +265,9 @@
     height: 100px;
     color: var(--text-muted);
     font-size: 14px;
+}
+
+/* Show delete button on message hover */
+.message-bubble:hover .msg-delete-btn {
+    opacity: 1 !important;
 }

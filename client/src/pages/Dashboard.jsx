@@ -13,7 +13,8 @@ export default function Dashboard() {
 
     const getImageUrl = (url) => {
         if (!url) return 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=1000';
-        return url.startsWith('/uploads') ? `http://localhost:5000${url}` : url;
+        const backendUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+        return url.startsWith('/uploads') ? `${backendUrl}${url}` : url;
     };
 
     useEffect(() => {
@@ -54,15 +55,15 @@ export default function Dashboard() {
                     </button>
                 </section>
 
-                {/* Upcoming Trips */}
+                {/* Upcoming Trips - Created */}
                 <section className="section-container">
                     <div className="section-header">
-                        <h3>Upcoming Trips</h3>
+                        <h3>Trips You're Organizing</h3>
                     </div>
                     
                     <div className="upcoming-scroll-container">
-                        {myTrips.length > 0 ? (
-                            myTrips.map(trip => (
+                        {myTrips.filter(t => t.creator._id === user.id).length > 0 ? (
+                            myTrips.filter(t => t.creator._id === user.id).map(trip => (
                                 <div key={trip._id} className="bento-large card-shadow group" onClick={() => navigate(`/trip/${trip._id}`)}>
                                     <div className="bento-bg">
                                         <img src={getImageUrl(trip.imageUrl)} alt={trip.title} />
@@ -85,7 +86,44 @@ export default function Dashboard() {
                             ))
                         ) : (
                             <div className="empty-state card-shadow">
-                                <p>You have no upcoming trips. Why not create one?</p>
+                                <p>You aren't organizing any trips yet.</p>
+                            </div>
+                        )}
+                    </div>
+                </section>
+
+                {/* Upcoming Trips - Joined */}
+                <section className="section-container">
+                    <div className="section-header">
+                        <h3>Trips You've Joined</h3>
+                    </div>
+                    
+                    <div className="upcoming-scroll-container">
+                        {myTrips.filter(t => t.creator._id !== user.id).length > 0 ? (
+                            myTrips.filter(t => t.creator._id !== user.id).map(trip => (
+                                <div key={trip._id} className="bento-large card-shadow group" onClick={() => navigate(`/trip/${trip._id}`)}>
+                                    <div className="bento-bg">
+                                        <img src={getImageUrl(trip.imageUrl)} alt={trip.title} />
+                                        <div className="bento-overlay"></div>
+                                    </div>
+                                    <div className="bento-content">
+                                        <div className="tags-row">
+                                            <span className="tag glass-tag">{trip.destination}</span>
+                                            <span className="tag glass-tag-light">
+                                                {new Date(trip.departureDate).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                        <h4 className="trip-title">{trip.title}</h4>
+                                        <div className="trip-meta-row">
+                                            <span className="meta-item"><Users size={16}/> {trip.travelers.length}/{trip.maxTravelers}</span>
+                                            <span className="meta-item"><Wallet size={16}/> ₦{trip.currentCostPerPerson?.toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="empty-state card-shadow">
+                                <p>You haven't joined any trips yet. Explore some nearby!</p>
                             </div>
                         )}
                     </div>

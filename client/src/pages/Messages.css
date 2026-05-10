@@ -37,7 +37,7 @@
     align-items: center;
     gap: 16px;
     padding: 16px 20px;
-    background: white;
+    background: var(--card-bg);
     border-radius: 16px;
     cursor: pointer;
     transition: all 0.2s;
@@ -110,7 +110,7 @@
 .empty-state {
     text-align: center;
     padding: 48px 24px;
-    background: white;
+    background: var(--card-bg);
     border-radius: 24px;
 }
 
@@ -145,7 +145,7 @@
     align-items: center;
     gap: 16px;
     padding: 16px 20px;
-    background: white;
+    background: var(--card-bg);
     border-radius: 16px;
     margin-bottom: 16px;
 }
@@ -255,7 +255,7 @@
 
 .message-bubble.received {
     align-self: flex-start;
-    background: white;
+    background: var(--card-bg);
     color: var(--text-main);
     border-bottom-left-radius: 4px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -275,7 +275,7 @@
     align-items: center;
     gap: 12px;
     padding: 16px;
-    background: white;
+    background: var(--card-bg);
     border-radius: 16px;
     box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
 }
@@ -326,4 +326,9 @@
     padding: 40px;
     color: var(--primary);
     font-weight: 500;
+}
+
+/* Show delete button on hover */
+.message-bubble:hover .msg-delete-btn {
+    opacity: 1 !important;
 }

@@ -37,6 +37,27 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    isSuspended: {
+        type: Boolean,
+        default: false
+    },
+    isEmailVerified: {
+        type: Boolean,
+        default: false
+    },
+    verificationCode: String,
+    averageRating: {
+        type: Number,
+        default: 0
+    },
+    emergencyContact: {
+        name: { type: String, default: "" },
+        phone: { type: String, default: "" }
+    },
+    profilePicture: {
+        type: String,
+        default: ""
+    },
     resetPasswordToken: String,
     resetPasswordExpires: Date
 }, { timestamps: true });

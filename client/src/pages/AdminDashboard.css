@@ -1,0 +1,191 @@
+.admin-dashboard-wrapper {
+    min-height: 100vh;
+    background: var(--bg-gradient);
+    padding: 100px 20px 40px;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-header {
+    margin-bottom: 30px;
+}
+
+.admin-header h1 {
+    font-size: 32px;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.admin-header p {
+    color: var(--text-muted);
+    font-size: 16px;
+}
+
+.admin-nav {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.admin-nav button {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    background: var(--card-bg);
+    color: var(--text-muted);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.admin-nav button.active {
+    background: var(--primary);
+    color: white;
+}
+
+.admin-nav button:hover:not(.active) {
+    background: var(--surface-container);
+    color: var(--primary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    padding: 24px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stat-card h3 {
+    font-size: 14px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.warning-stat .stat-value {
+    color: #ef4444;
+}
+
+.table-container {
+    background: var(--card-bg);
+    border-radius: 16px;
+    overflow-x: auto;
+    padding: 20px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.admin-table th, .admin-table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table th {
+    font-size: 14px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.admin-table td {
+    font-size: 15px;
+    color: var(--text-main);
+}
+
+.suspended-row td {
+    color: var(--text-muted);
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-badge.active, .status-badge.resolved, .status-badge.confirmed, .status-badge.completed {
+    background: rgba(16, 185, 129, 0.1);
+    color: #047857;
+}
+
+.status-badge.suspended, .status-badge.cancelled, .status-badge.dismissed {
+    background: rgba(107, 114, 128, 0.1);
+    color: #4b5563;
+}
+
+.status-badge.pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+}
+
+.status-badge.full {
+    background: rgba(59, 130, 246, 0.1);
+    color: #1d4ed8;
+}
+
+.btn-action {
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-action.suspend {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.btn-action.suspend:hover {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-action.unsuspend {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.btn-action.unsuspend:hover {
+    background: #10b981;
+    color: white;
+}
+
+.btn-action.resolve {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.btn-action.resolve:hover {
+    background: #3b82f6;
+    color: white;
+}

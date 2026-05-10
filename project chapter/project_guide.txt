@@ -1,0 +1,55 @@
+﻿PROJECT GUIDE
+A VIEW INTO PROJECT CONCEPTUAL FRAMEWORK AND ITS STANDARDIZATION
+CHOICE OF TOPIC
+(1) What is the rationale for the choice of your   topic?(2) What is your motivation for taking up this topic?   
+TEMPLATE FOR WRITING RESEARCH PROJECT (UNDERGRADUATE)
+PRELIMINARY PAGESCHAPTER ONE: INTRODUCTION CHAPTER TWO: LITERATURE REVIEWCHAPTER THREE: METHODOLOGYCHAPTER FOUR: IMPLEMENTATION/DISCUSSIONCHAPTER FIVE: SUMMARY, CONCLUSION AND RECOMMENDATIONSREFERENCES 
+PRELIMINARY PAGES
+COVER PAGETITLE PAGE (i)DECLARATION:   (ii)CERTIFICATION: (iii)APPROVAL : (iv)DEDICATION: (v)ACKNOWLEDGEMENTS: (vi)ABSTRACT: (vii)TABLE OF CONTENTS: (viii)LIST OF FIGURESLIST OF TABLES
+COVER PAGE
+DEVELOPMENT OF A DIGITALIZED RESPONSIVE LOGICAL INTERFACEATIKU ABUBAKASCN/CSC/2XXXXXDEPARTMENT OF COMPUTER SCIENCE,  FACULTY OF COMPUTING, BENSON IDAHOSA UNIVERSITY, BENIN CITY, EDO STATE, NIGERIADECEMBER, 2025
+TITLE PAGE
+DEVELOPMENT OF A DIGITALIZED RESPONSIVE LOGICAL INTERFACEATIKU ABUBAKASCN/CSC/2XXXXXA PROJECT WORKPRESENTED TO THE DEPARTMENT OF COMPUTER SCIENCE,  FACULTY OF COMPUTING, IN PARTIAL FULFILMENT OF THE REQUIREMENTS FOR THE AWARD OF BACHELOR DEGREE OF SCIENCE (B.Sc.) IN COMPUTER SCIENCE OF BENSON IDAHOSA UNIVERSITY, BENIN CITY, EDO STATE, NIGERIAJANUARY, 2026
+ABSTRACT
+                An Abstract is a concise summary of your work:A brief analysis of What you didHow did you do it (Methodology used and Programming Tools used)What are the expected resultsKEY POINTNo line spacing , no paragraph, not more than 250 words   
+CHAPTER ONEINTRODUCTION
+    1.1 Background to the Study1.2 Statement of the Problem1.3  Aim and Objectives of the study     1.4 Scope of the study1.5 Significance of the study1.6 Limitations of the study 1.7 Definition of terms
+Background to  the Study
+Introduction of Project topicIt could be:Advent in natureExpository but must be cited (Referenced) accordingly using APA Formatetc 
+Statement of the Problem
+This aspect emphasised the issue at hand as it relate to the research topic.Drawback as expressed by reviewed literaturesetc
+Aim and Objectives of the study
+Usually your aim is tied to your topic which should reflect your goalObjectives is the roadmap to getting to the goal. It should be minimum four.  The objectives must be implementable using terms such as Design, Develop, Implement and Evaluate. However, this solely depend on the structural tendency of the research layout. 
+Scope of the study
+The scope of a study refers to the extent or range of the research area that will  be investigated. It defines what will be covered and what will not be covered in the study. 
+Significance of the study
+Research Projects are designed to solve  problem. The important of such project to the sector is what is classified as the significance   
+Limitations of the study
+In the course of any research work there are bound to be some challenges. These challenges could be pre-planed, above your control. However, they are expected to be listed and explained    
+CHAPTER TWOLITERATURE REVIEW
+Literature Review: laying  foundation of knowledge for designWe expect you to organize this chapter thus:2.1 Introduction2.2 Related Works: This entails previous empirical studies, projects, or applications closely connected to the current research(The gap as identified from the reviewed literature must be stated clearly). Minimum literatures should be 50.
+2.3 Summary of Related Works: A summary of previous empirical studies, projects, or applications closely connected to the current research.(This should be in tabular form).
+CHAPTER THREEMETHODOLOGY
+Depending on the methodology chosen, it encompassed Systems Analysis and Design  3.1  Adopted Methodology (Your methodology must have relevant citations. Also make reference to methods adopted/modified from literature).3.2 Analysis of the Existing System (The Architectural design or model of the existing system should also be shown e.g Figure 3.1)3.2.1 Limitations or Drawbacks of the Existing System: Identification of the weaknesses of the existing system as seen in the gap identified
+CHAPTER THREEMETHODOLOGY
+ 3.3 Analysis of the Proposed System3.3.1 Preliminary Design >> High level model of the proposed system (Architectural View of the proposed system) and Design algorithm 3.3.2 Proposed System Justification >>> Why do you think your proposed solution is superior to the existing solution3.3.3	 Benefits of the proposed system
+CHAPTER THREEMETHODOLOGY
+3.4	System Design 3.4.1 Proposed System Modelling (UML ): if inline with the oriented application >> Use Case Diagram, Activity Diagram, Entity Relationship Diagram, Sequence Diagram, Dataflow Diagram etc 3.5 Database Design (If any)3.6 Input/Output Specification3.7 Cost Analysis
+CHAPTER FOURIMPLEMENTATION/DISCUSSION  
+4.1  Programming Language of Implementation4.1.1 Justification of programming language used4.2 System Requirements4.2.1 Hardware Requirements4.2.2 Software Requirements4.3 Implementation Guidelines4.4 Results and Discussions: In your discussion of results, back your analysis with facts from literature and compare your findings with recent similar works.
+CHAPTER FIVESUMMARY, CONCLUSION AND RECOMMEDATIONS
+5.1 Summary of Major findings 5.2 Conclusion: putting your Objectives in perspective, i. e each objectives as stated in the Chapter One must be accounted for here and how it was eventually solved 5.3 Recommendations: This must begin with your work and there after any other that might aid future findings   
+LAST PART OF THE WORK ARRANGEMENT 
+References in APA Method and in alphabetical orderAppendices A: Source codesAppendix B: sample outputsAppendix   C:Datasets(ifused)    									
+REFERENCES
+APA 6 (American Psychological Association) style  APA is publication or academic Manual often used by scholars. Most academic journals subscribed to this style 
+KEY POINTS
+LINE SPACING >>>> 2.0 Spacing FONT STYLE >>>> Times New RomanFONT SIZE >>>> From the beginning (cover) Page to the END (Appendix) 12 List of figure and table should be in ascending  order of chapters. E.G, Figure 1.2, 1.3, 2.1, 2.2 etc.  Table of contents should not be line dotted 
+KEY POINTS
+Case study should not appear in the cover page (if need be) Because it is well discussed in the body of the work (all project work do have case study which is the present system. So, there is no such need to reflect it in the cover page if need be )Every table and figure must be briefly discussed  with the figure referred to  
+KEY POINTS
+Table name appears on top (but must be at the table centre). All tables must be in scientific format where all gridlines are removed except for the titled row.Figure name appears at the left hand side of the diagram Let your references be within 10 years if need be i.e from 2015 till date but in a case of history and theories, no option. 
+OTHER KEY POINTS
+If the research in question is not a designed based work. Interest must be given to the survey analysis in CHAPTER 3 and the sub-heading will be “ANALYSIS” only. For CHAPTER 4, It will be “DISCUSSION” only. Attention must be given to full data proposition (Hypothesis) revalidation in chapter three and the solution fully discussed in Chapter four 
+THANK YOU!
+

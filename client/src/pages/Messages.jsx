@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Send, User as UserIcon, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Send, User as UserIcon, MessageCircle, Trash2 } from 'lucide-react';
 import API from '../api';
 import './Messages.css';
 
@@ -88,6 +88,16 @@ export default function Messages() {
         }
     };
 
+    const handleDeleteMessage = async (messageId) => {
+        if (!window.confirm('Delete this message?')) return;
+        try {
+            await API.delete(`/messages/message/${messageId}`);
+            setMessages(prev => prev.filter(m => m._id !== messageId));
+        } catch (err) {
+            console.error('Failed to delete message', err);
+        }
+    };
+
     // If we have a recipientId, show the chat view
     if (recipientId) {
         return (
@@ -116,17 +126,37 @@ export default function Messages() {
                                 <p>No messages yet. Say hello!</p>
                             </div>
                         ) : (
-                            messages.map(msg => (
+                            messages.map(msg => {
+                            const isSent = msg.sender._id === currentUser.id;
+                            return (
                                 <div 
                                     key={msg._id} 
-                                    className={`message-bubble ${msg.sender._id === currentUser.id ? 'sent' : 'received'}`}
+                                    className={`message-bubble ${isSent ? 'sent' : 'received'}`}
+                                    style={{ position: 'relative' }}
                                 >
                                     <p>{msg.text}</p>
                                     <span className="message-time">
                                         {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
+                                    {isSent && (
+                                        <button
+                                            onClick={() => handleDeleteMessage(msg._id)}
+                                            title="Delete message"
+                                            style={{
+                                                position: 'absolute', top: '6px', right: '6px',
+                                                background: 'none', border: 'none', cursor: 'pointer',
+                                                color: 'rgba(255,255,255,0.6)', padding: '2px',
+                                                display: 'flex', alignItems: 'center', opacity: 0,
+                                                transition: 'opacity 0.2s'
+                                            }}
+                                            className="msg-delete-btn"
+                                        >
+                                            <Trash2 size={12} />
+                                        </button>
+                                    )}
                                 </div>
-                            ))
+                            );
+                        })
                         )}
                         <div ref={messagesEndRef} />
                     </div>

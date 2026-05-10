@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { notifyPasswordReset } = require('../utils/emailService');
 
 // ... existing methods ...
 
@@ -22,16 +23,20 @@ exports.forgotPassword = async (req, res) => {
 
         await user.save();
 
-        // In a real app, send email here. 
-        // For development, we log it to the server console.
+        // Send email
+        await notifyPasswordReset(user.email, user.name, resetToken);
+
+        // Also log to console for development ease
         console.log('\n=============================================');
         console.log('🔐 PASSWORD RESET TOKEN GENERATED');
         console.log(`Email: ${user.email}`);
         console.log(`Token: ${resetToken}`);
+        const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+        console.log(`Reset Link: ${clientUrl}/reset-password?token=${resetToken}`);
         console.log('=============================================\n');
 
-        res.json({ 
-            message: "Password reset token generated. Check terminal."
+        res.json({
+            message: "If an account exists with that email, a password reset link has been sent."
         });
 
     } catch (err) {
@@ -43,6 +48,13 @@ exports.forgotPassword = async (req, res) => {
 exports.resetPassword = async (req, res) => {
     try {
         const { token, newPassword } = req.body;
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            return res.status(400).json({ 
+                message: "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character." 
+            });
+        }
 
         const user = await User.findOne({
             resetPasswordToken: token,
@@ -84,23 +96,43 @@ exports.register = async (req, res) => {
             return res.status(400).json({ message: "User already exists" });
         }
 
+        // password complexity check
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ 
+                message: "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character." 
+            });
+        }
+
         // hash password
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        // generate 6-digit verification code
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
         // create user
         const user = await User.create({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            verificationCode
         });
 
+        // Log code for development
+        console.log('\n=============================================');
+        console.log('📧 EMAIL VERIFICATION CODE');
+        console.log(`User: ${user.name} (${user.email})`);
+        console.log(`Code: ${verificationCode}`);
+        console.log('=============================================\n');
+
         res.status(201).json({
-            message: "User created successfully",
+            message: "User created successfully. Please verify your email.",
             user: {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                isEmailVerified: user.isEmailVerified
             }
         });
 
@@ -124,6 +156,10 @@ exports.login = async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        if (user.isSuspended) {
+            return res.status(403).json({ message: "Account suspended. Contact admin." });
         }
 
         // compare password
@@ -151,7 +187,8 @@ exports.login = async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                profilePicture: user.profilePicture
             }
         });
 
@@ -171,6 +208,19 @@ exports.getMe = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
         if (!user) {
+            return res.status(401).json({ message: "User not found, please re-authenticate" });
+        }
+        res.json({ user });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// GET USER PROFILE (PUBLIC)
+exports.getUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('name bio averageRating isEmailVerified createdAt');
+        if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
         res.json({ user });
@@ -184,14 +234,76 @@ exports.updateProfile = async (req, res) => {
     try {
         const { name, bio, phone } = req.body;
 
+        // Handle emergencyContact from FormData (bracket notation) or plain JSON
+        let emergencyContact = req.body.emergencyContact;
+        if (!emergencyContact && req.body['emergencyContact[name]'] !== undefined) {
+            emergencyContact = {
+                name: req.body['emergencyContact[name]'] || '',
+                phone: req.body['emergencyContact[phone]'] || ''
+            };
+        }
+
         const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        if (name) user.name = name;
-        if (bio !== undefined) user.bio = bio;
-        if (phone !== undefined) user.phone = phone;
+        // Handle profile picture upload
+        if (req.file) {
+            user.profilePicture = req.file.path || `/uploads/${req.file.filename}`;
+        }
+
+        // Enforce profile picture as compulsory if user doesn't have one yet
+        if (!user.profilePicture && !req.file) {
+            return res.status(400).json({ 
+                message: "A profile picture is required. Please upload one.",
+                requiresProfilePicture: true
+            });
+        }
+
+        // 1. Name Validation
+        if (name) {
+            if (name.trim().length < 2 || name.trim().length > 50) {
+                return res.status(400).json({ message: "Name must be between 2 and 50 characters" });
+            }
+            user.name = name.trim();
+        }
+
+        // 2. Bio Validation
+        if (bio !== undefined) {
+            if (bio.length > 200) {
+                return res.status(400).json({ message: "Bio cannot exceed 200 characters" });
+            }
+            user.bio = bio;
+        }
+
+        // 3. Phone Validation (Basic)
+        const phoneRegex = /^\+?[0-9]{10,15}$/;
+        if (phone !== undefined && phone !== "") {
+            if (!phoneRegex.test(phone)) {
+                return res.status(400).json({ message: "Invalid phone number format. Use 10-15 digits." });
+            }
+            user.phone = phone;
+        }
+
+        // 4. Emergency Contact Validation
+        if (emergencyContact) {
+            if (emergencyContact.name) {
+                if (emergencyContact.name.trim().length < 2 || emergencyContact.name.trim().length > 50) {
+                    return res.status(400).json({ message: "Emergency contact name must be 2-50 characters" });
+                }
+            }
+            if (emergencyContact.phone) {
+                if (!phoneRegex.test(emergencyContact.phone)) {
+                    return res.status(400).json({ message: "Invalid emergency phone format. Use 10-15 digits." });
+                }
+            }
+            
+            user.emergencyContact = {
+                name: emergencyContact.name || (user.emergencyContact ? user.emergencyContact.name : ""),
+                phone: emergencyContact.phone || (user.emergencyContact ? user.emergencyContact.phone : "")
+            };
+        }
 
         await user.save();
 
@@ -203,7 +315,9 @@ exports.updateProfile = async (req, res) => {
                 email: user.email,
                 bio: user.bio,
                 phone: user.phone,
-                role: user.role
+                profilePicture: user.profilePicture,
+                isEmailVerified: user.isEmailVerified,
+                emergencyContact: user.emergencyContact
             }
         });
 
@@ -211,6 +325,7 @@ exports.updateProfile = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
 
 // UPDATE PASSWORD
 exports.updatePassword = async (req, res) => {
@@ -231,12 +346,67 @@ exports.updatePassword = async (req, res) => {
             return res.status(400).json({ message: "Incorrect old password" });
         }
 
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            return res.status(400).json({ 
+                message: "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character." 
+            });
+        }
+
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
         await user.save();
 
         res.json({ message: "Password updated successfully" });
 
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// VERIFY EMAIL
+exports.verifyEmail = async (req, res) => {
+    try {
+        const { email, code } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+        if (user.isEmailVerified) return res.status(400).json({ message: "Email already verified" });
+
+        if (user.verificationCode !== code) {
+            return res.status(400).json({ message: "Invalid verification code" });
+        }
+
+        user.isEmailVerified = true;
+        user.verificationCode = undefined;
+        await user.save();
+
+        res.json({ message: "Email verified successfully", isEmailVerified: true });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+// RESEND VERIFICATION CODE
+exports.resendCode = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+        if (user.isEmailVerified) return res.status(400).json({ message: "Email already verified" });
+
+        const newCode = Math.floor(100000 + Math.random() * 900000).toString();
+        user.verificationCode = newCode;
+        await user.save();
+
+        console.log('\n=============================================');
+        console.log('📧 RESENT VERIFICATION CODE');
+        console.log(`Email: ${user.email}`);
+        console.log(`Code: ${newCode}`);
+        console.log('=============================================\n');
+
+        res.json({ message: "Verification code resent" });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

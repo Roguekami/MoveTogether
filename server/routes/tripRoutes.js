@@ -21,6 +21,7 @@ router.post('/:id/leave', tripController.leaveTrip);
 // Group Chat Routes
 router.get('/:id/messages', tripController.getTripMessages);
 router.post('/:id/messages', tripController.sendTripMessage);
+router.delete('/:tripId/messages/:messageId', tripController.deleteTripMessage);
 router.post('/:tripId/accept/:userId', tripController.acceptRequest);
 router.post('/:tripId/reject/:userId', tripController.rejectRequest);
 router.post('/:tripId/remove/:userId', tripController.removeTraveler);

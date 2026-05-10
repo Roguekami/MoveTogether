@@ -13,6 +13,20 @@
   --glass-border: rgba(255, 255, 255, 0.5);
 }
 
+[data-theme='dark'] {
+  --bg-gradient: #0f172a;
+  --card-bg: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --primary: #8b5cf6;
+  --primary-hover: #a78bfa;
+  --input-bg: #334155;
+  --border-color: #475569;
+  --surface-container: #1e293b;
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -48,7 +62,7 @@ body {
 }
 
 .input-soft:focus {
-  background: #ffffff;
+  background: var(--card-bg);
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
 }
@@ -97,7 +111,7 @@ body {
 }
 
 .btn-social:hover {
-  background: #e5e7eb;
+  background: var(--border-color);
 }
 
 /* Toggle Pill */
@@ -133,7 +147,7 @@ body {
   left: 4px;
   width: calc(50% - 4px);
   height: calc(100% - 8px);
-  background: white;
+  background: var(--card-bg);
   border-radius: 26px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);

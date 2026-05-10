@@ -26,7 +26,7 @@
 .search-bar {
     display: flex;
     align-items: center;
-    background: white;
+    background: var(--card-bg);
     border-radius: 16px;
     padding: 8px 16px;
     margin-bottom: 24px;
@@ -89,7 +89,7 @@
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    background: white;
+    background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 100px;
     color: var(--text-main);
@@ -116,7 +116,7 @@
 .view-toggle {
     display: flex;
     gap: 8px;
-    background: white;
+    background: var(--card-bg);
     padding: 4px;
     border-radius: 12px;
     width: fit-content;
@@ -171,7 +171,7 @@
 /* Ensure Dashboard.css is loaded or copy the styles if they conflict */
 
 .nearby-card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
@@ -191,7 +191,9 @@
 .nearby-image-container img {
     width: 100%;
     height: 100%;
+    display: block;
     object-fit: cover;
+    object-position: center;
 }
 
 .status-badge {
@@ -306,4 +308,214 @@
     font-size: 14px;
     margin-bottom: 24px;
     line-height: 1.5;
+}
+
+/* Extended Filters */
+.extended-filters {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.filter-group select,
+.filter-group input {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-main);
+    background: var(--bg-soft);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+    border-color: var(--primary);
+}
+
+/* Additional Badges */
+.full-badge {
+    color: #ef4444; /* Red */
+}
+
+.confirmed-badge {
+    color: #3b82f6; /* Blue */
+}
+
+.almost-full-badge {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    background: #f59e0b; /* Amber */
+    color: white;
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+/* Skeleton Loading */
+.skeleton {
+    animation: pulse 1.5s infinite;
+}
+
+.skeleton-img {
+    height: 160px;
+    background: var(--border-color);
+}
+
+.skeleton-text {
+    height: 14px;
+    background: var(--border-color);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.skeleton-text.title {
+    height: 18px;
+    width: 70%;
+    margin-bottom: 16px;
+}
+
+.skeleton-text.meta {
+    width: 100%;
+}
+
+.skeleton-text.short {
+    width: 40%;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Empty State */
+.empty-state {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 60px 20px;
+    text-align: center;
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.empty-icon {
+    color: var(--border-color);
+    margin-bottom: 24px;
+}
+
+.empty-state h3 {
+    font-size: 24px;
+    color: var(--text-main);
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.empty-state p {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin-bottom: 32px;
+    line-height: 1.5;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Explore Map */
+.explore-map-container {
+    width: 100%;
+    height: 500px;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+}
+
+.map-note {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--text-muted);
+    z-index: 500;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.map-popup {
+    font-family: inherit;
+}
+
+.map-popup strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.map-popup p {
+    margin: 2px 0;
+    font-size: 13px;
+    color: #555;
+}
+
+.map-popup button {
+    margin-top: 8px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.map-popup button:hover {
+    opacity: 0.9;
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
 }

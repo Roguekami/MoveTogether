@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MapPin, Navigation, Calendar, Users, Wallet, Image as ImageIcon, ChevronLeft } from 'lucide-react';
 import API from '../api';
+import LocationPicker from '../components/LocationPicker';
 import './CreateTrip.css';
 
 export default function EditTrip() {
@@ -21,12 +22,22 @@ export default function EditTrip() {
         image: null
     });
 
+    const [coords, setCoords] = useState({
+        originCoords: null,
+        destinationCoords: null,
+        meetingPointCoords: null
+    });
+
     // Get current datetime string for min attribute
     const now = new Date();
     const minDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0,16);
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [error, setError] = useState('');
+
+    // Location picker state
+    const [pickerOpen, setPickerOpen] = useState(false);
+    const [activeField, setActiveField] = useState('origin');
 
     useEffect(() => {
         const fetchTrip = async () => {
@@ -49,6 +60,13 @@ export default function EditTrip() {
                     totalCost: trip.totalCost,
                     imageUrl: trip.imageUrl
                 });
+
+                // Load existing coords if available
+                setCoords({
+                    originCoords: trip.originCoords?.lat ? trip.originCoords : null,
+                    destinationCoords: trip.destinationCoords?.lat ? trip.destinationCoords : null,
+                    meetingPointCoords: trip.meetingPointCoords?.lat ? trip.meetingPointCoords : null
+                });
             } catch (err) {
                 setError(err.response?.data?.message || 'Failed to load trip');
             } finally {
@@ -68,6 +86,23 @@ export default function EditTrip() {
         setError('');
     };
 
+    const openPicker = (field) => {
+        setActiveField(field);
+        setPickerOpen(true);
+    };
+
+    const handleLocationSelect = ({ name, coords: selectedCoords }) => {
+        const coordsKeyMap = {
+            origin: 'originCoords',
+            destination: 'destinationCoords',
+            meeting_point: 'meetingPointCoords'
+        };
+
+        const shortName = name.split(',').slice(0, 2).join(',').trim();
+        setForm(prev => ({ ...prev, [activeField]: shortName }));
+        setCoords(prev => ({ ...prev, [coordsKeyMap[activeField]]: selectedCoords }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -83,6 +118,11 @@ export default function EditTrip() {
                 }
             });
 
+            // Append coords as JSON strings
+            if (coords.originCoords) formData.append('originCoords', JSON.stringify(coords.originCoords));
+            if (coords.destinationCoords) formData.append('destinationCoords', JSON.stringify(coords.destinationCoords));
+            if (coords.meetingPointCoords) formData.append('meetingPointCoords', JSON.stringify(coords.meetingPointCoords));
+
             await API.put(`/trips/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -93,6 +133,12 @@ export default function EditTrip() {
             setError(err.response?.data?.message || 'Failed to update trip');
             setLoading(false);
         }
+    };
+
+    const getCoordsForField = () => {
+        const map = { origin: 'originCoords', destination: 'destinationCoords', meeting_point: 'meetingPointCoords' };
+        const c = coords[map[activeField]];
+        return c ? [c.lat, c.lng] : null;
     };
 
     if (fetching) return <div className="loading-screen">Loading Trip Details...</div>;
@@ -128,49 +174,67 @@ export default function EditTrip() {
                     <div className="route-container">
                         <div className="input-group flex-1">
                             <label className="input-label">FROM</label>
-                            <div className="input-wrapper">
-                                <input
-                                    className="input-soft"
-                                    type="text"
-                                    name="origin"
-                                    placeholder="City or Campus"
-                                    value={form.origin}
-                                    onChange={handleChange}
-                                    required
-                                />
-                                <MapPin size={16} className="input-icon" />
+                            <div className="input-with-pin">
+                                <div className="input-wrapper">
+                                    <input
+                                        className="input-soft"
+                                        type="text"
+                                        name="origin"
+                                        placeholder="City or Campus"
+                                        value={form.origin}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <MapPin size={16} className="input-icon" />
+                                </div>
+                                <button type="button" className={`pin-map-btn ${coords.originCoords ? 'has-pin' : ''}`} onClick={() => openPicker('origin')}>
+                                    <MapPin size={14} />
+                                    <span>{coords.originCoords ? '✓ Pinned' : 'Pin on Map'}</span>
+                                </button>
                             </div>
                         </div>
                         <div className="input-group flex-1">
                             <label className="input-label">TO</label>
-                            <div className="input-wrapper">
-                                <input
-                                    className="input-soft"
-                                    type="text"
-                                    name="destination"
-                                    placeholder="Destination"
-                                    value={form.destination}
-                                    onChange={handleChange}
-                                    required
-                                />
-                                <Navigation size={16} className="input-icon" />
+                            <div className="input-with-pin">
+                                <div className="input-wrapper">
+                                    <input
+                                        className="input-soft"
+                                        type="text"
+                                        name="destination"
+                                        placeholder="Destination"
+                                        value={form.destination}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <Navigation size={16} className="input-icon" />
+                                </div>
+                                <button type="button" className={`pin-map-btn ${coords.destinationCoords ? 'has-pin' : ''}`} onClick={() => openPicker('destination')}>
+                                    <MapPin size={14} />
+                                    <span>{coords.destinationCoords ? '✓ Pinned' : 'Pin on Map'}</span>
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     <div className="input-group">
                         <label className="input-label">MEETING POINT</label>
-                        <div className="input-wrapper">
-                            <input
-                                className="input-soft"
-                                type="text"
-                                name="meeting_point"
-                                placeholder="e.g., Campus Gate, Airport Terminal 1"
-                                value={form.meeting_point}
-                                onChange={handleChange}
-                                required
-                            />
-                            <MapPin size={16} className="input-icon" />
+                        <div className="input-with-pin">
+                            <div className="input-wrapper">
+                                <input
+                                    className="input-soft"
+                                    type="text"
+                                    name="meeting_point"
+                                    placeholder="e.g., Campus Gate, Airport Terminal 1"
+                                    value={form.meeting_point}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <MapPin size={16} className="input-icon" />
+                            </div>
+                            <button type="button" className={`pin-map-btn ${coords.meetingPointCoords ? 'has-pin' : ''}`} onClick={() => openPicker('meeting_point')}>
+                                <MapPin size={14} />
+                                <span>{coords.meetingPointCoords ? '✓ Pinned' : 'Pin on Map'}</span>
+                            </button>
                         </div>
                     </div>
 
@@ -297,6 +361,14 @@ export default function EditTrip() {
                     </button>
                 </form>
             </main>
+
+            <LocationPicker
+                isOpen={pickerOpen}
+                onClose={() => setPickerOpen(false)}
+                onSelectLocation={handleLocationSelect}
+                activeField={activeField}
+                currentCoords={getCoordsForField()}
+            />
         </div>
     );
 }
