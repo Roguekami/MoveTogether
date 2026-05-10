@@ -133,14 +133,10 @@ export default function Dashboard() {
                 <section className="section-container">
                     <div className="section-header">
                         <h3>Nearby Trips</h3>
-                        <div className="nav-buttons">
-                            <button className="nav-btn"><ChevronLeft size={18} /></button>
-                            <button className="nav-btn"><ChevronRight size={18} /></button>
-                        </div>
                     </div>
 
                     <div className="nearby-grid">
-                        {nearbyTrips.slice(0, 4).map(trip => (
+                        {nearbyTrips.map(trip => (
                             <div key={trip._id} className="nearby-card group" onClick={() => navigate(`/trip/${trip._id}`)}>
                                 <div className="nearby-image-container">
                                     <img src={getImageUrl(trip.imageUrl)} alt={trip.title} />

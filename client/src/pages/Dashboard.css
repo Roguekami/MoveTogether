@@ -293,9 +293,22 @@
 
 /* Nearby Grid */
 .nearby-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+.nearby-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.nearby-card {
+    min-width: 280px;
+    scroll-snap-align: center;
+    flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
