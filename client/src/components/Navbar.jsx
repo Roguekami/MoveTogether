@@ -170,7 +170,11 @@ export default function Navbar() {
                                                 notifications.map(n => (
                                                     <div key={n._id} className={`notif-item ${!n.isRead ? 'unread' : ''}`} onClick={() => {
                                                         setShowNotifs(false);
-                                                        if (n.relatedTrip) navigate(`/trip/${n.relatedTrip._id}`);
+                                                        if (n.type === 'new_message') {
+                                                            navigate('/messages');
+                                                        } else if (n.relatedTrip) {
+                                                            navigate(`/trip/${n.relatedTrip._id}`);
+                                                        }
                                                     }}>
                                                         <p>{n.message}</p>
                                                         <small>{new Date(n.createdAt).toLocaleDateString()}</small>

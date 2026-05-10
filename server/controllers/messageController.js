@@ -1,5 +1,6 @@
 const Message = require('../models/Message');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 
 // GET all conversations for the current user
 exports.getConversations = async (req, res) => {
@@ -94,6 +95,22 @@ exports.sendMessage = async (req, res) => {
             { path: 'sender', select: 'name' },
             { path: 'receiver', select: 'name' }
         ]);
+
+        // Create a notification for the recipient if there isn't an unread one from this sender already
+        const existingNotif = await Notification.findOne({
+            recipient: recipientId,
+            type: 'new_message',
+            isRead: false,
+            message: `New message from ${populated.sender.name}`
+        });
+
+        if (!existingNotif) {
+            await Notification.create({
+                recipient: recipientId,
+                type: 'new_message',
+                message: `New message from ${populated.sender.name}`
+            });
+        }
 
         res.status(201).json({ message: populated });
     } catch (err) {
