@@ -36,20 +36,22 @@ export default function Navbar() {
 
     const closeMenu = () => setIsMobileMenuOpen(false);
 
-    // Read user from localStorage to check role
+    // Read user from localStorage initially, then sync from API
     const userString = localStorage.getItem('user');
+    let initialUser = null;
     let isAdmin = false;
     let userId = null;
-    let user = null;
     if (userString) {
         try {
-            user = JSON.parse(userString);
-            isAdmin = user.role === 'admin';
-            userId = user.id;
+            initialUser = JSON.parse(userString);
+            isAdmin = initialUser.role === 'admin';
+            userId = initialUser.id;
         } catch (e) {
             console.error("Failed to parse user from localStorage", e);
         }
     }
+
+    const [user, setUser] = useState(initialUser);
 
     const [notifications, setNotifications] = useState([]);
     const [unreadMessageCount, setUnreadMessageCount] = useState(0);
@@ -78,7 +80,22 @@ export default function Navbar() {
 
     useEffect(() => {
         if (!userId) return;
-        
+
+        // Fetch fresh user data from API so profile picture is always up-to-date
+        const fetchCurrentUser = async () => {
+            try {
+                const res = await API.get('/auth/me');
+                const freshUser = res.data.user;
+                setUser(freshUser);
+                // Also sync localStorage
+                const stored = JSON.parse(localStorage.getItem('user') || '{}');
+                localStorage.setItem('user', JSON.stringify({ ...stored, ...freshUser }));
+            } catch (err) {
+                console.error('Failed to refresh user', err);
+            }
+        };
+
+        fetchCurrentUser();
         fetchNotifications();
         fetchUnreadMessages();
 
