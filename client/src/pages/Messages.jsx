@@ -108,7 +108,7 @@ export default function Messages() {
                         <button className="back-btn" onClick={() => navigate('/messages')}>
                             <ArrowLeft size={20} />
                         </button>
-                        <div className="chat-header-info">
+                        <div className="chat-header-info" onClick={() => recipient?._id && navigate(`/user/${recipient._id}`)} style={{ cursor: 'pointer' }}>
                             <div className="chat-avatar" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 {recipient?.profilePicture ? (
                                     <img 
@@ -120,7 +120,7 @@ export default function Messages() {
                                     <UserIcon size={18} />
                                 )}
                             </div>
-                            <h3>{recipient?.name || 'Loading...'}</h3>
+                            <h3 style={{ textDecoration: 'none' }}>{recipient?.name || 'Loading...'}</h3>
                         </div>
                     </div>
 

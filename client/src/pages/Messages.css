@@ -192,6 +192,11 @@
     color: var(--text-main);
 }
 
+.chat-header-info:hover h3 {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
 /* Messages Area */
 .messages-area {
     flex: 1;
