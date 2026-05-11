@@ -16,6 +16,11 @@ const tripMessageSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  messageType: {
+    type: String,
+    enum: ['text', 'location', 'system'],
+    default: 'text'
+  },
   latitude: {
     type: Number
   },

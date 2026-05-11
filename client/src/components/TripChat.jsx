@@ -203,7 +203,7 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
                                     </div>
                                 )}
                                 <div className="message-bubble" style={{ position: 'relative' }}>
-                                    {msg.messageType === 'text' && <p className="message-text">{msg.text}</p>}
+                                    {(!msg.messageType || msg.messageType === 'text') && <p className="message-text">{msg.text}</p>}
                                     {msg.messageType === 'location' && (
                                         <div className="location-attachment">
                                             <MapPin size={16} />
