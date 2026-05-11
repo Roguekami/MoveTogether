@@ -14,14 +14,8 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Redirect if already logged in
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/', { replace: true });
-    }
-  }, [navigate]);
-
+  // Redirect if already logged in - removed as handled by App.jsx PublicRoute
+  
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError('');
@@ -36,7 +30,7 @@ export default function AuthPage() {
       });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || 'Google login failed');
       setLoading(false);
@@ -62,7 +56,7 @@ export default function AuthPage() {
         });
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('user', JSON.stringify(res.data.user));
-        navigate('/');
+        navigate('/', { replace: true });
       } else if (mode === 'signup') {
         const res = await API.post('/auth/register', {
           name: form.name,

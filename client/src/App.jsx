@@ -17,14 +17,19 @@ import Layout from './components/Layout';
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
-  return token ? <Layout>{children}</Layout> : <Navigate to="/auth" />;
+  return token ? <Layout>{children}</Layout> : <Navigate to="/auth" replace />;
+};
+
+const PublicRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  return token ? <Navigate to="/" replace /> : children;
 };
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/auth" element={<PublicRoute><AuthPage /></PublicRoute>} />
         <Route path="/verify-email" element={<CheckEmailPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />

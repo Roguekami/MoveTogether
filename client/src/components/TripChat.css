@@ -110,6 +110,8 @@
     border-radius: 18px;
     position: relative;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    width: fit-content;
+    min-width: 50px;
 }
 
 .message-mine .message-bubble {
@@ -129,7 +131,8 @@
     margin: 0;
     font-size: 14px;
     line-height: 1.4;
-    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .message-time {
@@ -300,13 +303,15 @@
     .message-bubble {
         padding: 10px 14px;
         border-radius: 14px;
+        width: fit-content;
+        min-width: 40px;
     }
 
     .message-text {
         font-size: 13px;
         line-height: 1.5;
-        word-break: break-word;
         overflow-wrap: break-word;
+        white-space: pre-wrap;
     }
 
     .message-time {
