@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, User as UserIcon, MessageCircle, Trash2 } from 'lucide-react';
+import { io } from 'socket.io-client';
 import API from '../api';
 import './Messages.css';
 
@@ -9,6 +10,7 @@ export default function Messages() {
     const navigate = useNavigate();
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
+    const socketRef = useRef(null);
 
     // Conversations list state
     const [conversations, setConversations] = useState([]);
@@ -23,6 +25,38 @@ export default function Messages() {
 
     const currentUser = JSON.parse(localStorage.getItem('user')) || {};
 
+    // Socket.io connection — join user's personal room for real-time messages
+    useEffect(() => {
+        if (!currentUser.id) return;
+
+        const backendUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+        const socket = io(backendUrl);
+        socketRef.current = socket;
+
+        socket.on('connect', () => {
+            socket.emit('join-user', currentUser.id);
+        });
+
+        // Listen for incoming private messages in real-time
+        socket.on('receive-message', (msg) => {
+            // If we're in the chat view with this sender, add the message
+            setMessages(prev => {
+                // Avoid duplicates
+                if (prev.some(m => m._id === msg._id)) return prev;
+                return [...prev, msg];
+            });
+
+            // Also refresh the conversations list if we're on the list view
+            if (!recipientId) {
+                fetchConversations();
+            }
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, [currentUser.id, recipientId]);
+
     // Load conversations list
     useEffect(() => {
         if (!recipientId) {
@@ -30,13 +64,10 @@ export default function Messages() {
         }
     }, [recipientId]);
 
-    // Load chat when recipientId changes
+    // Load chat when recipientId changes — one-time fetch, socket handles the rest
     useEffect(() => {
         if (recipientId) {
             fetchMessages();
-            // Poll for new messages every 5 seconds
-            const interval = setInterval(fetchMessages, 5000);
-            return () => clearInterval(interval);
         }
     }, [recipientId]);
 
