@@ -81,14 +81,18 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
         const messageText = newMessage.trim();
         if (!messageText) return;
         
+        // Optimistic clear to avoid mobile keyboard ghosting
+        setNewMessage('');
+
         setSending(true);
         setError('');
         try {
             await API.post(`/trips/${tripId}/messages`, { text: messageText });
-            // Clear input after successful send
-            setNewMessage('');
+            // Success: socket will handle adding the message
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to send message');
+            // Restore text on failure
+            setNewMessage(messageText);
         } finally {
             setSending(false);
         }

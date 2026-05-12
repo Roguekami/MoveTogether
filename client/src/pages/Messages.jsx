@@ -106,17 +106,24 @@ export default function Messages() {
         const messageText = newMessage.trim();
         if (!messageText || sending) return;
 
+        // Force UI to clear immediately (optimistic update)
+        setNewMessage('');
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
+
         setSending(true);
         try {
             await API.post(`/messages/${recipientId}`, { 
                 recipientId,
                 text: messageText 
             });
-            // Clear input after successful send
-            setNewMessage('');
-            if (inputRef.current) inputRef.current.value = '';
+            // Success: socket will handle adding the message to the UI
         } catch (err) {
             console.error('Failed to send message', err);
+            // Restore text if it fails
+            setNewMessage(messageText);
+            if (inputRef.current) inputRef.current.value = messageText;
         } finally {
             setSending(false);
         }
