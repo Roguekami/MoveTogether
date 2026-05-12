@@ -2,7 +2,7 @@
     min-height: 100vh;
     padding: 100px 20px 40px;
     background: var(--bg-soft);
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 /* Conversations List View */
@@ -236,11 +236,13 @@
 
 /* Message Bubbles */
 .message-bubble {
-    max-width: 75%;
+    max-width: 85%;
     padding: 12px 16px;
     border-radius: 18px;
     position: relative;
     animation: fadeInUp 0.2s ease;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 @keyframes fadeInUp {
@@ -252,6 +254,9 @@
     font-size: 15px;
     line-height: 1.4;
     margin: 0;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .message-bubble.sent {
@@ -286,6 +291,7 @@
     background: var(--card-bg);
     border-radius: 16px;
     box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+    flex-shrink: 0;
 }
 
 .message-input {
@@ -341,44 +347,39 @@
     opacity: 1 !important;
 }
 
-/* ===== Mobile: fix keyboard overflow ===== */
+/* ===== Mobile ===== */
 @media (max-width: 768px) {
-    /* Chat page wrapper — no extra bottom padding so input stays in view */
-    .messages-wrapper:has(.chat-container) {
-        padding: 0;
-        height: 100dvh;
-        height: 100vh; /* fallback */
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
+    .messages-wrapper {
+        padding: 70px 10px 20px;
+        min-height: 100vh;
     }
 
     .chat-container {
-        flex: 1;
-        height: 100%;
-        /* Reset the fixed height; let flex do the work */
-        height: unset;
-        padding: 0;
-        /* Add top padding for the navbar */
-        padding-top: env(safe-area-inset-top, 60px);
-    }
-
-    /* Input bar sticks to bottom, above the keyboard */
-    .message-input-bar {
-        border-radius: 0;
-        padding: 10px 12px;
-        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-        position: sticky;
-        bottom: 0;
+        height: calc(100vh - 70px);
+        height: calc(100dvh - 70px);
     }
 
     .chat-header {
         border-radius: 0;
         margin-bottom: 0;
         padding: 10px 14px;
+        flex-shrink: 0;
     }
 
     .messages-area {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
         padding: 10px;
+    }
+
+    .message-input-bar {
+        border-radius: 0;
+        padding: 10px 12px;
+        flex-shrink: 0;
+    }
+
+    .message-bubble {
+        max-width: 90%;
     }
 }

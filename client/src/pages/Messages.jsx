@@ -8,6 +8,7 @@ export default function Messages() {
     const { recipientId } = useParams();
     const navigate = useNavigate();
     const messagesEndRef = useRef(null);
+    const inputRef = useRef(null);
 
     // Conversations list state
     const [conversations, setConversations] = useState([]);
@@ -74,7 +75,10 @@ export default function Messages() {
         const messageText = newMessage.trim();
         if (!messageText || sending) return;
 
+        // Clear the input immediately — both React state and DOM ref
         setNewMessage('');
+        if (inputRef.current) inputRef.current.value = '';
+
         setSending(true);
         try {
             const res = await API.post(`/messages/${recipientId}`, { 
@@ -174,6 +178,7 @@ export default function Messages() {
                     {/* Message Input */}
                     <form className="message-input-bar" onSubmit={handleSend}>
                         <input
+                            ref={inputRef}
                             type="text"
                             placeholder="Type a message..."
                             value={newMessage}
