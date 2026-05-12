@@ -348,7 +348,9 @@
 @media (max-width: 768px) {
     .messages-wrapper {
         padding: 72px 0 0;
-        min-height: 100dvh;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Conversations list mobile */
@@ -389,12 +391,12 @@
 
     /* Chat view mobile — full screen layout */
     .chat-container {
-        height: 100dvh;
-        height: calc(100vh - 72px);
+        height: calc(100dvh - 72px);
         max-width: 100%;
         border-radius: 0;
         display: flex;
         flex-direction: column;
+        flex: 1;
     }
 
     .chat-container .chat-header {

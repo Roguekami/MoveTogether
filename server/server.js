@@ -40,6 +40,12 @@ const globalLimiter = rateLimit({
 app.use('/api', globalLimiter);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Socket.io middleware - Must be before routes!
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
@@ -67,12 +73,6 @@ app.get('/api/protected', authMiddleware, (req, res) => {
         message: "You accessed a protected route",
         user: req.user
     });
-});
-
-// Socket.io middleware
-app.use((req, res, next) => {
-    req.io = io;
-    next();
 });
 
 // Test route
