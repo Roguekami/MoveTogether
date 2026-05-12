@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, User as UserIcon, MessageCircle, Trash2 } from 'lucide-react';
-import { io } from 'socket.io-client';
 import API from '../api';
 import './Messages.css';
 
@@ -9,8 +8,6 @@ export default function Messages() {
     const { recipientId } = useParams();
     const navigate = useNavigate();
     const messagesEndRef = useRef(null);
-    const inputRef = useRef(null);
-    const socketRef = useRef(null);
 
     // Conversations list state
     const [conversations, setConversations] = useState([]);
@@ -25,38 +22,6 @@ export default function Messages() {
 
     const currentUser = JSON.parse(localStorage.getItem('user')) || {};
 
-    // Socket.io connection — join user's personal room for real-time messages
-    useEffect(() => {
-        if (!currentUser.id) return;
-
-        const backendUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
-        const socket = io(backendUrl);
-        socketRef.current = socket;
-
-        socket.on('connect', () => {
-            socket.emit('join-user', currentUser.id);
-        });
-
-        // Listen for incoming private messages in real-time
-        socket.on('receive-message', (msg) => {
-            // If we're in the chat view with this sender, add the message
-            setMessages(prev => {
-                // Avoid duplicates
-                if (prev.some(m => m._id === msg._id)) return prev;
-                return [...prev, msg];
-            });
-
-            // Also refresh the conversations list if we're on the list view
-            if (!recipientId) {
-                fetchConversations();
-            }
-        });
-
-        return () => {
-            socket.disconnect();
-        };
-    }, [currentUser.id, recipientId]);
-
     // Load conversations list
     useEffect(() => {
         if (!recipientId) {
@@ -64,10 +29,13 @@ export default function Messages() {
         }
     }, [recipientId]);
 
-    // Load chat when recipientId changes — one-time fetch, socket handles the rest
+    // Load chat when recipientId changes
     useEffect(() => {
         if (recipientId) {
             fetchMessages();
+            // Poll for new messages every 5 seconds
+            const interval = setInterval(fetchMessages, 5000);
+            return () => clearInterval(interval);
         }
     }, [recipientId]);
 
@@ -106,24 +74,17 @@ export default function Messages() {
         const messageText = newMessage.trim();
         if (!messageText || sending) return;
 
-        // Force UI to clear immediately (optimistic update)
         setNewMessage('');
-        if (inputRef.current) {
-            inputRef.current.value = '';
-        }
-
         setSending(true);
         try {
-            await API.post(`/messages/${recipientId}`, { 
+            const res = await API.post(`/messages/${recipientId}`, { 
                 recipientId,
                 text: messageText 
             });
-            // Success: socket will handle adding the message to the UI
+            setMessages(prev => [...prev, res.data.message]);
         } catch (err) {
             console.error('Failed to send message', err);
-            // Restore text if it fails
             setNewMessage(messageText);
-            if (inputRef.current) inputRef.current.value = messageText;
         } finally {
             setSending(false);
         }
@@ -213,7 +174,6 @@ export default function Messages() {
                     {/* Message Input */}
                     <form className="message-input-bar" onSubmit={handleSend}>
                         <input
-                            ref={inputRef}
                             type="text"
                             placeholder="Type a message..."
                             value={newMessage}

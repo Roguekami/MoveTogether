@@ -9,7 +9,7 @@
     position: relative;
 }
 
-.chat-header {
+.trip-chat-container .chat-header {
     padding: 20px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
@@ -18,7 +18,7 @@
     background: var(--surface-container);
 }
 
-.chat-header h3 {
+.trip-chat-container .chat-header h3 {
     font-size: 18px;
     font-weight: 600;
     margin: 0;
@@ -70,7 +70,7 @@
     background: var(--bg-gradient);
 }
 
-.empty-chat {
+.trip-chat-container .empty-chat {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -80,24 +80,24 @@
     font-size: 14px;
 }
 
-.message-wrapper {
+.trip-chat-container .message-wrapper {
     display: flex;
     flex-direction: column;
     max-width: 85%;
 }
 
-.message-mine {
+.trip-chat-container .message-mine {
     align-self: flex-end;
     align-items: flex-end;
 }
 
-.message-theirs {
+.trip-chat-container .message-theirs {
     align-self: flex-start;
     align-items: flex-start;
 }
 
-.sender-name {
-    font-size: 11px;
+.trip-chat-container .sender-name {
+    font-size: 12px;
     font-weight: 600;
     color: var(--text-muted);
     margin-bottom: 4px;
@@ -105,31 +105,31 @@
     margin-right: 4px;
 }
 
-.message-bubble {
+.trip-chat-container .message-bubble {
     padding: 12px 16px;
     border-radius: 18px;
     position: relative;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     width: fit-content;
     max-width: 100%;
-    min-width: 70px;
+    min-width: 80px;
     word-break: break-word;
 }
 
-.message-mine .message-bubble {
+.trip-chat-container .message-mine .message-bubble {
     background: var(--primary);
     color: white;
     border-bottom-right-radius: 4px;
 }
 
-.message-theirs .message-bubble {
+.trip-chat-container .message-theirs .message-bubble {
     background: var(--card-bg);
     color: var(--text-main);
     border-bottom-left-radius: 4px;
     border: 1px solid var(--border-color);
 }
 
-.message-text {
+.trip-chat-container .message-text {
     margin: 0;
     font-size: 14px;
     line-height: 1.4;
@@ -137,7 +137,7 @@
     white-space: pre-wrap;
 }
 
-.message-time {
+.trip-chat-container .message-time {
     display: block;
     font-size: 10px;
     margin-top: 6px;
@@ -146,7 +146,7 @@
     white-space: nowrap;
 }
 
-.system-message {
+.trip-chat-container .system-message {
     text-align: center;
     color: var(--text-muted);
     font-size: 12px;
@@ -154,7 +154,7 @@
     width: 100%;
 }
 
-.system-message i {
+.trip-chat-container .system-message i {
     font-style: normal;
     background: #f3f4f6;
     padding: 4px 12px;
@@ -274,7 +274,7 @@
 }
 
 /* Show delete button on message hover */
-.message-bubble:hover .msg-delete-btn {
+.trip-chat-container .message-bubble:hover .msg-delete-btn {
     opacity: 1 !important;
 }
 
@@ -286,11 +286,11 @@
         border-radius: 16px;
     }
 
-    .chat-header {
+    .trip-chat-container .chat-header {
         padding: 12px 16px;
     }
 
-    .chat-header h3 {
+    .trip-chat-container .chat-header h3 {
         font-size: 15px;
     }
 
@@ -299,35 +299,35 @@
         gap: 10px;
     }
 
-    .message-wrapper {
+    .trip-chat-container .message-wrapper {
         max-width: 95%;
     }
 
-    .message-bubble {
+    .trip-chat-container .message-bubble {
         padding: 10px 14px;
         border-radius: 14px;
         width: fit-content;
         max-width: 100%;
-        min-width: 70px;
+        min-width: 75px;
         word-break: break-word;
     }
 
-    .message-text {
-        font-size: 13px;
+    .trip-chat-container .message-text {
+        font-size: 14px;
         line-height: 1.5;
         overflow-wrap: break-word;
         white-space: pre-wrap;
     }
 
-    .message-time {
+    .trip-chat-container .message-time {
         font-size: 9px;
     }
 
-    .sender-name {
-        font-size: 10px;
+    .trip-chat-container .sender-name {
+        font-size: 11px;
     }
 
-    .system-message {
+    .trip-chat-container .system-message {
         font-size: 11px;
     }
 
