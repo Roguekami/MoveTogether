@@ -78,16 +78,18 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        if (!newMessage.trim()) return;
+        const messageText = newMessage.trim();
+        if (!messageText) return;
         
+        setNewMessage('');
         setSending(true);
         setError('');
         try {
-            await API.post(`/trips/${tripId}/messages`, { text: newMessage });
-            setNewMessage('');
+            await API.post(`/trips/${tripId}/messages`, { text: messageText });
             // No need to fetchMessages — the socket 'receive-message' event handles it
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to send message');
+            setNewMessage(messageText);
         } finally {
             setSending(false);
         }

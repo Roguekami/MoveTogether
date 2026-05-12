@@ -2,6 +2,7 @@
     min-height: 100vh;
     padding: 100px 20px 40px;
     background: var(--bg-soft);
+    overflow-x: hidden;
 }
 
 /* Conversations List View */
@@ -138,6 +139,8 @@
     display: flex;
     flex-direction: column;
     height: calc(100vh - 140px);
+    /* Use dynamic viewport height on browsers that support it */
+    height: calc(100dvh - 140px);
 }
 
 .chat-header {
@@ -336,4 +339,46 @@
 /* Show delete button on hover */
 .message-bubble:hover .msg-delete-btn {
     opacity: 1 !important;
+}
+
+/* ===== Mobile: fix keyboard overflow ===== */
+@media (max-width: 768px) {
+    /* Chat page wrapper — no extra bottom padding so input stays in view */
+    .messages-wrapper:has(.chat-container) {
+        padding: 0;
+        height: 100dvh;
+        height: 100vh; /* fallback */
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-container {
+        flex: 1;
+        height: 100%;
+        /* Reset the fixed height; let flex do the work */
+        height: unset;
+        padding: 0;
+        /* Add top padding for the navbar */
+        padding-top: env(safe-area-inset-top, 60px);
+    }
+
+    /* Input bar sticks to bottom, above the keyboard */
+    .message-input-bar {
+        border-radius: 0;
+        padding: 10px 12px;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+        position: sticky;
+        bottom: 0;
+    }
+
+    .chat-header {
+        border-radius: 0;
+        margin-bottom: 0;
+        padding: 10px 14px;
+    }
+
+    .messages-area {
+        padding: 10px;
+    }
 }

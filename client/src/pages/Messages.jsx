@@ -71,18 +71,20 @@ export default function Messages() {
 
     const handleSend = async (e) => {
         e.preventDefault();
-        if (!newMessage.trim() || sending) return;
+        const messageText = newMessage.trim();
+        if (!messageText || sending) return;
 
+        setNewMessage('');
         setSending(true);
         try {
             const res = await API.post(`/messages/${recipientId}`, { 
                 recipientId,
-                text: newMessage 
+                text: messageText 
             });
             setMessages(prev => [...prev, res.data.message]);
-            setNewMessage('');
         } catch (err) {
             console.error('Failed to send message', err);
+            setNewMessage(messageText);
         } finally {
             setSending(false);
         }
