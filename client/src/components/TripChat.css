@@ -112,7 +112,7 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     width: fit-content;
     max-width: 100%;
-    min-width: 50px;
+    min-width: 70px;
     word-break: break-word;
 }
 
@@ -143,6 +143,7 @@
     margin-top: 6px;
     text-align: right;
     opacity: 0.7;
+    white-space: nowrap;
 }
 
 .system-message {

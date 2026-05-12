@@ -106,20 +106,17 @@ export default function Messages() {
         const messageText = newMessage.trim();
         if (!messageText || sending) return;
 
-        // Clear the input immediately — both React state and DOM ref
-        setNewMessage('');
-        if (inputRef.current) inputRef.current.value = '';
-
         setSending(true);
         try {
-            const res = await API.post(`/messages/${recipientId}`, { 
+            await API.post(`/messages/${recipientId}`, { 
                 recipientId,
                 text: messageText 
             });
-            setMessages(prev => [...prev, res.data.message]);
+            // Clear input after successful send
+            setNewMessage('');
+            if (inputRef.current) inputRef.current.value = '';
         } catch (err) {
             console.error('Failed to send message', err);
-            setNewMessage(messageText);
         } finally {
             setSending(false);
         }

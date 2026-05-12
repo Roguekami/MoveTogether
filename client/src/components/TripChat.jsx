@@ -81,15 +81,14 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
         const messageText = newMessage.trim();
         if (!messageText) return;
         
-        setNewMessage('');
         setSending(true);
         setError('');
         try {
             await API.post(`/trips/${tripId}/messages`, { text: messageText });
-            // No need to fetchMessages — the socket 'receive-message' event handles it
+            // Clear input after successful send
+            setNewMessage('');
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to send message');
-            setNewMessage(messageText);
         } finally {
             setSending(false);
         }
@@ -167,7 +166,11 @@ export default function TripChat({ tripId, currentUser, isTerminal }) {
                         }
 
                         const isMe = msg.sender && msg.sender._id === currentUser.id;
-                        const showName = !isMe && msg.sender && (index === 0 || (messages[index - 1].sender && messages[index - 1].sender._id !== msg.sender._id));
+                        const showName = !isMe && msg.sender && (
+                            index === 0 || 
+                            !messages[index - 1].sender || 
+                            messages[index - 1].sender._id !== msg.sender._id
+                        );
 
                         return (
                             <div key={msg._id} className={`message-wrapper ${isMe ? 'message-mine' : 'message-theirs'}`}>
